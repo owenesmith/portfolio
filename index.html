@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Work</title>
+<meta name="description" content="A portfolio of woodworking and electronics projects by Your Name.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4efe6;
+    --bg-card: #fbf8f2;
+    --ink: #1f1a14;
+    --ink-soft: #5a4f42;
+    --rule: #d9cfbf;
+    --accent: #8a3a1f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 4rem 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variation-settings: "opsz" 144;
+  }
+
+  .site-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .site-sub {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 40ch;
+  }
+
+  /* ---------- Grid ---------- */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 3rem 2rem;
+  }
+
+  /* ---------- Card ---------- */
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .frame img.active { opacity: 1; }
+
+  /* Arrows only appear for multi-photo cards */
+  .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(251, 248, 242, 0.85);
+    backdrop-filter: blur(4px);
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .frame:hover .nav { opacity: 1; }
+  .nav:hover { background: var(--bg-card); }
+  .nav.prev { left: 0.75rem; }
+  .nav.next { right: 0.75rem; }
+
+  /* Touch devices: always show arrows on multi-photo cards */
+  @media (hover: none) {
+    .nav { opacity: 0.9; }
+  }
+
+  /* Dots */
+  .dots {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(251, 248, 242, 0.55);
+    border: 1px solid rgba(31, 26, 20, 0.25);
+    transition: background 0.2s ease;
+  }
+
+  .dot.active { background: var(--ink); border-color: var(--ink); }
+
+  /* ---------- Card text ---------- */
+  .meta {
+    margin-top: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .index-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    min-width: 1.5rem;
+  }
+
+  .title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .desc {
+    margin-top: 0.4rem;
+    margin-left: 2.25rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  footer a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 2.5rem 1.25rem 2rem; }
+    main { padding: 2rem 1.25rem 4rem; }
+    .grid { gap: 2.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="site-title">Your Name<em>.</em></h1>
+  <p class="site-sub">Woodworking, the occasional circuit, and things made in between.</p>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> Your Name</span>
+  <span><a href="mailto:hello@yourname.com">hello@yourname.com</a></span>
+</footer>
+
+<script>
+  // ============================================================
+  // EDIT THIS LIST. Add one entry per project.
+  // - photos: array of image paths (use ['img/foo.jpg'] for one,
+  //   or ['img/foo-1.jpg','img/foo-2.jpg'] for multiple)
+  // - desc: optional. Leave as '' to omit.
+  // ============================================================
+  const projects = [
+    {
+      title: "Striped Cutting Board",
+      desc: "Maple, purpleheart, padauk, and walnut.",
+      photos: ["img/cutting-board-1.jpg", "img/cutting-board-2.jpg", "img/cutting-board-3.jpg"]
+    },
+    {
+      title: "Wenge Showpiece",
+      desc: "",
+      photos: ["img/wenge.jpg"]
+    },
+    {
+      title: "Laser-Etched Slate Coasters",
+      desc: "A personalized gift set.",
+      photos: ["img/coasters-1.jpg", "img/coasters-2.jpg"]
+    },
+    // Add more projects here...
+  ];
+
+  // ---------- Render ----------
+  const grid = document.getElementById('grid');
+
+  projects.forEach((p, i) => {
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    const multi = p.photos.length > 1;
+    const imgs = p.photos.map((src, idx) =>
+      `<img src="${src}" alt="${p.title} — photo ${idx + 1}" loading="lazy" class="${idx === 0 ? 'active' : ''}">`
+    ).join('');
+
+    const dots = multi
+      ? `<div class="dots">${p.photos.map((_, idx) =>
+          `<span class="dot ${idx === 0 ? 'active' : ''}"></span>`
+        ).join('')}</div>`
+      : '';
+
+    const arrows = multi
+      ? `<button class="nav prev" aria-label="Previous photo">‹</button>
+         <button class="nav next" aria-label="Next photo">›</button>`
+      : '';
+
+    card.innerHTML = `
+      <div class="frame">
+        ${imgs}
+        ${arrows}
+        ${dots}
+      </div>
+      <div class="meta">
+        <span class="index-num">${String(i + 1).padStart(2, '0')}</span>
+        <h2 class="title">${p.title}</h2>
+      </div>
+      ${p.desc ? `<p class="desc">${p.desc}</p>` : ''}
+    `;
+
+    grid.appendChild(card);
+
+    // ---------- Carousel logic ----------
+    if (multi) {
+      const frame = card.querySelector('.frame');
+      const images = frame.querySelectorAll('img');
+      const dotEls = frame.querySelectorAll('.dot');
+      let current = 0;
+
+      const show = (n) => {
+        images[current].classList.remove('active');
+        dotEls[current].classList.remove('active');
+        current = (n + images.length) % images.length;
+        images[current].classList.add('active');
+        dotEls[current].classList.add('active');
+      };
+
+      frame.querySelector('.prev').addEventListener('click', () => show(current - 1));
+      frame.querySelector('.next').addEventListener('click', () => show(current + 1));
+    }
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
