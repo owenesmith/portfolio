@@ -24,12 +24,16 @@
       "title": "Rotating Poster Frame",
       "desc": "Battery operated frame containing 10 posters on a motorized scroll with backlighting, controllable by bluetooth app.",
       "section": "physical"
+    },
+    "curvy-shelf": {
+      "title": "Curvy Shelf",
+      "desc": "Bent Lamination",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
-      "curvy-shelf",
       "anamorphic-crystal-engraving",
       "walnut-fireplace-mantle",
       "walnut-maple-lamp",
@@ -45,7 +49,8 @@
       "cutting-board",
       "charleston-union-pier-map",
       "balance-scale",
-      "rotating-poster-frame"
+      "rotating-poster-frame",
+      "curvy-shelf"
     ],
     "digital": []
   }
