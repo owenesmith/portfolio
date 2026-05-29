@@ -44,13 +44,17 @@
       "title": "Steel Paper Towel Roll Holder",
       "desc": "9lb solid welded steel.",
       "section": "physical"
+    },
+    "habit-tracker": {
+      "title": "Habit Tracker",
+      "desc": "Walnut, brass + epoxy inlays, and glass shelf.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
       "walnut-fireplace-mantle",
-      "habit-tracker",
       "slate-coasters",
       "cork-engraved-coasters",
       "walnut-maple-tongs",
@@ -65,7 +69,8 @@
       "curvy-shelf",
       "anamorphic-crystal-engraving",
       "walnut-maple-lamp",
-      "steel-paper-towel-roll-holder"
+      "steel-paper-towel-roll-holder",
+      "habit-tracker"
     ],
     "digital": []
   }
