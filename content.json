@@ -29,12 +29,16 @@
       "title": "Curvy Shelf",
       "desc": "Bent Lamination",
       "section": "physical"
+    },
+    "anamorphic-crystal-engraving": {
+      "title": "Anamorphic Crystal Engraving",
+      "desc": "Uses custom program to take 3D file, break into pieces, scale for depth and refractive index, and align to focal point.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
-      "anamorphic-crystal-engraving",
       "walnut-fireplace-mantle",
       "walnut-maple-lamp",
       "steel-paper-towel-roll-holder",
@@ -50,7 +54,8 @@
       "charleston-union-pier-map",
       "balance-scale",
       "rotating-poster-frame",
-      "curvy-shelf"
+      "curvy-shelf",
+      "anamorphic-crystal-engraving"
     ],
     "digital": []
   }

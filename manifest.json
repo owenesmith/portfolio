@@ -83,7 +83,7 @@
     {
       "id": "anamorphic-crystal-engraving",
       "title": "Anamorphic Crystal Engraving",
-      "desc": "",
+      "desc": "Uses custom program to take 3D file, break into pieces, scale for depth and refractive index, and align to focal point.",
       "color": null,
       "section": "physical",
       "photos": [
