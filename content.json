@@ -42,7 +42,7 @@
     },
     "steel-paper-towel-roll-holder": {
       "title": "Steel Paper Towel Roll Holder",
-      "desc": "9lb solid welded steel.",
+      "desc": "9lb solid welded steel with brass topper.",
       "section": "physical"
     },
     "habit-tracker": {
@@ -71,11 +71,11 @@
       "curvy-shelf",
       "anamorphic-crystal-engraving",
       "walnut-maple-lamp",
-      "steel-paper-towel-roll-holder",
       "habit-tracker",
       "walnut-maple-tongs",
       "charleston-union-pier-map",
-      "rotating-poster-frame"
+      "rotating-poster-frame",
+      "steel-paper-towel-roll-holder"
     ],
     "digital": []
   }
