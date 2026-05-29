@@ -412,6 +412,18 @@ body:not(.edit-mode) .view-cue { } /* cue shows normally */
 .editor button { cursor: pointer; border: 1px solid var(--rule); border-radius: 5px; background: var(--ink); color: var(--bg-card); padding: 0.3rem 0.7rem; font: inherit; font-size: 0.8rem; }
 .editor .ed-cancel, .editor .ed-hide { background: var(--bg-card); color: var(--ink-soft); }
 .editor .ed-hide { margin-left: auto; }
+.editor .ed-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 0.25rem; }
+.editor .ed-hint { text-transform: none; letter-spacing: 0; opacity: 0.85; margin-left: 0.4rem; }
+.ed-images { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ed-thumb { position: relative; width: 58px; height: 58px; border-radius: 5px; overflow: hidden; border: 1px solid var(--rule); background: var(--bg); }
+.ed-thumb img, .ed-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ed-thumb .ed-rep, .ed-thumb .ed-rm { position: absolute; border: none; cursor: pointer; font-size: 0.64rem; line-height: 1; padding: 2px 4px; color: #fff; margin: 0; }
+.ed-thumb .ed-rep { left: 0; bottom: 0; background: rgba(33,27,20,0.72); border-radius: 0 5px 0 0; }
+.ed-thumb .ed-rm { right: 0; top: 0; background: rgba(138,58,31,0.85); border-radius: 0 0 0 5px; }
+.ed-thumb .ed-rep:hover { background: rgba(33,27,20,0.95); }
+.ed-thumb .ed-rm:hover { background: var(--accent); }
+.editor .ed-add { width: 58px; height: 58px; border: 1px dashed var(--rule); border-radius: 5px; background: var(--bg); color: var(--ink-soft); cursor: pointer; font: inherit; font-size: 0.72rem; margin: 0; }
+.editor .ed-add:hover { border-color: var(--accent); color: var(--accent); }
 body.edit-mode .card[draggable] { cursor: grab; }
 body.edit-mode .card[draggable]:active { cursor: grabbing; }
 body.edit-mode .frame { outline: 2px dashed var(--card-accent, var(--ink)); outline-offset: 4px; cursor: grab; }

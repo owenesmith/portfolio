@@ -40,7 +40,8 @@
 
   // ---------- GitHub backend ----------
   const GH = {
-    owner: 'owenesmith', repo: 'portfolio', branch: 'main',
+    owner: 'owenesmith', repo: 'portfolio',
+    get branch() { return localStorage.getItem('gh.branch') || 'main'; },
     token: () => localStorage.getItem('gh.token') || '',
     connected: () => !!localStorage.getItem('gh.token'),
     async api(p, opts = {}) {
@@ -65,7 +66,9 @@
         const headCommit = await GH.api(`/repos/${owner}/${repo}/git/commits/${headSha}`);
         const tree = [];
         for (const f of files) {
-          if (f.blobBase64 != null) {
+          if (f.delete) {
+            tree.push({ path: f.path, mode: '100644', type: 'blob', sha: null });
+          } else if (f.blobBase64 != null) {
             const blob = await GH.api(`/repos/${owner}/${repo}/git/blobs`, { method: 'POST', body: JSON.stringify({ content: f.blobBase64, encoding: 'base64' }) });
             tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
           } else {
@@ -302,13 +305,22 @@
     if (!canEdit()) { flashMsg('Connect GitHub (top bar) or run the local studio to edit.'); return; }
     if (openEditorEl) openEditorEl.remove();
     const ed = document.createElement('div'); ed.className = 'editor';
+    const thumbs = p.photos.map((src) => {
+      const shown = previewUrls[src] || src;
+      const media = isVideo(src) ? `<video src="${esc(shown)}" muted playsinline></video>` : `<img src="${esc(shown)}" alt="">`;
+      return `<div class="ed-thumb" data-path="${esc(src)}">${media}<button type="button" class="ed-rep" title="Replace">⟲</button><button type="button" class="ed-rm" title="Remove">✕</button></div>`;
+    }).join('');
     ed.innerHTML = `
       <input class="ed-title" value="${esc(p.title)}" placeholder="Title">
       <textarea class="ed-desc" placeholder="Description (optional)">${esc(p.desc)}</textarea>
       <div class="ed-row"><label>Section</label>
         <select class="ed-section"><option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option><option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option></select>
         <button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button><button class="ed-hide" type="button">Hide</button>
-      </div>`;
+      </div>
+      <div class="ed-label">Images <span class="ed-hint">⟲ replace · ✕ remove</span></div>
+      <div class="ed-images">${thumbs}<button type="button" class="ed-add" title="Add image(s) to this project">+ Add</button></div>
+      <input type="file" class="ed-file-add" accept="image/*" multiple hidden>
+      <input type="file" class="ed-file-rep" accept="image/*" hidden>`;
     card.appendChild(ed); openEditorEl = ed;
     ed.querySelector('.ed-cancel').addEventListener('click', () => { ed.remove(); openEditorEl = null; });
     ed.querySelector('.ed-save').addEventListener('click', async () => {
@@ -327,6 +339,14 @@
       openEditorEl = null;
       await persist('Hide “' + p.title + '”');
     });
+    // image management: add / replace / remove
+    let repPath = null;
+    const fileAdd = ed.querySelector('.ed-file-add'), fileRep = ed.querySelector('.ed-file-rep');
+    ed.querySelector('.ed-add').addEventListener('click', () => fileAdd.click());
+    fileAdd.addEventListener('change', () => { if (fileAdd.files.length) addPhotosToProject(p, fileAdd.files); fileAdd.value = ''; });
+    ed.querySelectorAll('.ed-rep').forEach(b => b.addEventListener('click', () => { repPath = b.closest('.ed-thumb').dataset.path; fileRep.click(); }));
+    fileRep.addEventListener('change', () => { if (fileRep.files[0] && repPath) replacePhoto(p, repPath, fileRep.files[0]); fileRep.value = ''; });
+    ed.querySelectorAll('.ed-rm').forEach(b => b.addEventListener('click', () => removePhoto(p, b.closest('.ed-thumb').dataset.path)));
   }
   const findProject = (id) => [...MANIFEST.physical, ...MANIFEST.digital].find(p => p.id === id);
   function moveProject(id, from, to) {
@@ -336,8 +356,11 @@
   }
   function ensureOrder(id, section) {
     CONTENT.order = CONTENT.order || { physical: [], digital: [] };
-    for (const s of ['physical', 'digital']) CONTENT.order[s] = (CONTENT.order[s] || []).filter(x => x !== id);
-    CONTENT.order[section] = CONTENT.order[section] || []; if (!CONTENT.order[section].includes(id)) CONTENT.order[section].push(id);
+    // only drop it from the OTHER section (a section change); keep its position in this one
+    const other = section === 'physical' ? 'digital' : 'physical';
+    CONTENT.order[other] = (CONTENT.order[other] || []).filter(x => x !== id);
+    CONTENT.order[section] = CONTENT.order[section] || [];
+    if (!CONTENT.order[section].includes(id)) CONTENT.order[section].push(id);
   }
 
   // ---------- Drag to reorder ----------
@@ -409,6 +432,72 @@
     } else { flashMsg('Connect GitHub (top bar) to add images to the live site.'); }
   }
 
+  // ---------- Per-project image management (add / replace / remove) ----------
+  const projectBase = (project) => project.photos.length ? baseOf(project.photos[0].split('/').pop()) : project.title.replace(/[^A-Za-z0-9]+/g, '-');
+  function nextNames(project, count) {
+    const base = projectBase(project);
+    let max = 0;
+    for (const ph of project.photos) { const s = suffixOf(ph.split('/').pop()); max = Math.max(max, s < 0 ? 1 : s); }
+    return Array.from({ length: count }, (_, k) => `${base}-${max + 1 + k}.jpeg`);
+  }
+  function reopenEditor(id) {
+    const proj = findProject(id); if (!proj) return;
+    const card = [...document.querySelectorAll('.card')].find(c => c.dataset.id === id);
+    if (card) openEditor(card, proj, proj.section);
+  }
+  async function addPhotosToProject(project, fileList) {
+    const files = [...fileList].filter(f => /\.(jpe?g|png|webp)$/i.test(f.name));
+    if (!files.length) { flashMsg('Pick image files (jpg/png/webp).'); return; }
+    const names = nextNames(project, files.length);
+    try {
+      flashMsg('Adding ' + files.length + ' photo(s)…');
+      const blobs = []; for (const f of files) blobs.push(await optimizeImage(f));
+      if (API_OK) {
+        for (let k = 0; k < blobs.length; k++) await fetch('/api/upload/' + encodeURIComponent(names[k]), { method: 'PUT', body: blobs[k] });
+        await loadData(); render(); reopenEditor(project.id); flashMsg('Added ' + files.length + ' photo(s).');
+      } else if (GH.connected()) {
+        const extra = []; const proj = findProject(project.id);
+        for (let k = 0; k < blobs.length; k++) { const p = 'img/' + names[k]; previewUrls[p] = URL.createObjectURL(blobs[k]); proj.photos.push(p); extra.push({ path: p, blobBase64: await blobToBase64(blobs[k]) }); }
+        proj.photos.sort((a, b) => suffixOf(a.split('/').pop()) - suffixOf(b.split('/').pop()));
+        await persist('Add ' + files.length + ' photo(s) to ' + project.title, extra); reopenEditor(project.id);
+      } else flashMsg('Connect GitHub (top bar) to add images.');
+    } catch (e) { flashMsg('Add failed: ' + e.message); }
+  }
+  async function replacePhoto(project, path, file) {
+    if (!file || !/\.(jpe?g|png|webp)$/i.test(file.name)) { flashMsg('Pick an image file.'); return; }
+    try {
+      flashMsg('Replacing…');
+      const blob = await optimizeImage(file);
+      if (API_OK) {
+        await fetch('/api/upload/' + encodeURIComponent(path.split('/').pop()), { method: 'PUT', body: blob });
+        await loadData(); render(); reopenEditor(project.id); flashMsg('Replaced.');
+      } else if (GH.connected()) {
+        previewUrls[path] = URL.createObjectURL(blob);
+        await persist('Replace ' + path, [{ path, blobBase64: await blobToBase64(blob) }]); reopenEditor(project.id);
+      } else flashMsg('Connect GitHub (top bar) to replace images.');
+    } catch (e) { flashMsg('Replace failed: ' + e.message); }
+  }
+  async function removePhoto(project, path) {
+    const proj = findProject(project.id); if (!proj) return;
+    if (proj.photos.length <= 1 && !confirm('Remove the last photo and the whole “' + project.title + '” project?')) return;
+    proj.photos = proj.photos.filter(p => p !== path);
+    const emptied = proj.photos.length === 0;
+    if (emptied) {
+      for (const s of ['physical', 'digital']) MANIFEST[s] = MANIFEST[s].filter(x => x.id !== project.id);
+      if (CONTENT.order) for (const s of ['physical', 'digital']) CONTENT.order[s] = (CONTENT.order[s] || []).filter(x => x !== project.id);
+    }
+    try {
+      flashMsg('Removing…');
+      if (API_OK) {
+        await fetch('/api/image/' + encodeURIComponent(path.split('/').pop()), { method: 'DELETE' });
+        await fetch('/api/content', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CONTENT) });
+        await loadData(); render(); if (!emptied) reopenEditor(project.id); flashMsg('Removed.');
+      } else if (GH.connected()) {
+        await persist('Remove ' + path, [{ path, delete: true }]); if (!emptied) reopenEditor(project.id);
+      } else flashMsg('Connect GitHub (top bar) to remove images.');
+    } catch (e) { flashMsg('Remove failed: ' + e.message); }
+  }
+
   // ---------- Login / edit mode ----------
   const loginBtn = document.getElementById('login-btn'), loginForm = document.getElementById('login-form');
   const loginPass = document.getElementById('login-pass'), loginError = document.getElementById('login-error');
@@ -431,9 +520,10 @@
     document.getElementById('reset-order').hidden = API_OK || ghConn;
     document.getElementById('gh-connect').hidden = ghConn;
     document.getElementById('gh-disconnect').hidden = !ghConn;
+    document.getElementById('add-img-btn').hidden = !(API_OK || ghConn);
     document.getElementById('gh-status').innerHTML = `<span class="gh-dot ${ghConn ? 'on' : ''}"></span>GitHub: ${ghConn ? 'connected' : 'not connected'}`;
     editMsg.textContent = API_OK
-      ? 'Editing locally — drag to reorder · ✎ to edit · drop images to add · then Publish.'
+      ? 'Editing locally — drag to reorder · ✎ to edit/add/replace images · + New work · then Publish.'
       : (ghConn ? 'Editing the live site — changes commit to GitHub on save (live in ~1 min).'
                 : 'Connect GitHub to edit the live site (drag/✎/drop), or run node studio.mjs locally.');
   }
@@ -446,6 +536,9 @@
     flashMsg('Publishing to GitHub…');
     try { const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Update portfolio content' }) }); const j = await r.json(); flashMsg(j.ok ? ('Published ✓ ' + (j.detail || '')) : ('Publish failed: ' + (j.error || ''))); } catch (e) { flashMsg('Publish failed: ' + e.message); }
   });
+  // + New work — create new project(s) from picked images (filename becomes the title)
+  document.getElementById('add-img-btn').addEventListener('click', () => document.getElementById('add-img-file').click());
+  document.getElementById('add-img-file').addEventListener('change', (e) => { if (e.target.files.length) uploadFiles(e.target.files); e.target.value = ''; });
 
   // GitHub connect controls
   document.getElementById('gh-connect').addEventListener('click', () => { const f = document.getElementById('gh-form'); f.hidden = !f.hidden; if (!f.hidden) document.getElementById('gh-token').focus(); });

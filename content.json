@@ -58,24 +58,24 @@
   },
   "order": {
     "physical": [
-      "tree-bookshelf",
-      "walnut-fireplace-mantle",
-      "slate-coasters",
-      "cork-engraved-coasters",
-      "airbnb-sign",
-      "cat-sign",
-      "paper-towel-roll-holder",
       "kumiko-style-lamp",
       "cutting-board",
+      "charleston-union-pier-map",
       "balance-scale",
+      "tree-bookshelf",
+      "rotating-poster-frame",
       "curvy-shelf",
       "anamorphic-crystal-engraving",
-      "habit-tracker",
-      "walnut-maple-tongs",
-      "charleston-union-pier-map",
-      "rotating-poster-frame",
+      "walnut-fireplace-mantle",
+      "walnut-maple-lamp",
       "steel-paper-towel-roll-holder",
-      "walnut-maple-lamp"
+      "habit-tracker",
+      "slate-coasters",
+      "cork-engraved-coasters",
+      "walnut-maple-tongs",
+      "airbnb-sign",
+      "cat-sign",
+      "paper-towel-roll-holder"
     ],
     "digital": []
   }

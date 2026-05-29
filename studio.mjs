@@ -81,6 +81,16 @@ async function handleApi(req, res, url) {
     } catch (e) { return sendJson(res, 400, { ok: false, error: String(e.message) }); }
   }
 
+  if (req.method === 'DELETE' && route.startsWith('/api/image/')) {
+    try {
+      const name = path.basename(decodeURIComponent(route.slice('/api/image/'.length)));
+      const f = path.join(IMG, name);
+      if (fs.existsSync(f)) fs.rmSync(f);
+      regenerate();
+      return sendJson(res, 200, { ok: true, name });
+    } catch (e) { return sendJson(res, 400, { ok: false, error: String(e.message) }); }
+  }
+
   if (req.method === 'POST' && route === '/api/publish') {
     try {
       const body = JSON.parse((await readBody(req, 1024 * 1024)).toString() || '{}');
