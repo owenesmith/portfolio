@@ -9,11 +9,15 @@
       "title": "Cutting Board",
       "desc": "Maple, Walnut, Purpleheart, Padauk, with Brass + Rubber Feet.",
       "section": "physical"
+    },
+    "charleston-union-pier-map": {
+      "title": "Charleston Union Pier Map",
+      "desc": "Maple + Walnut, Epoxy fill street map and brass Union Pier inlay.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
-      "charleston-union-pier-map",
       "balance-scale",
       "tree-bookshelf",
       "rotating-poster-frame",
@@ -30,7 +34,8 @@
       "cat-sign",
       "paper-towel-roll-holder",
       "kumiko-style-lamp",
-      "cutting-board"
+      "cutting-board",
+      "charleston-union-pier-map"
     ],
     "digital": []
   }
