@@ -34,13 +34,17 @@
       "title": "Anamorphic Crystal Engraving",
       "desc": "Uses custom program to take 3D file, break into pieces, scale for depth and refractive index, and align to focal point.",
       "section": "physical"
+    },
+    "walnut-maple-lamp": {
+      "title": "Walnut Maple Lamp",
+      "desc": "Walnut and Maple, hollow octagonal pole with internal wiring.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
       "walnut-fireplace-mantle",
-      "walnut-maple-lamp",
       "steel-paper-towel-roll-holder",
       "habit-tracker",
       "slate-coasters",
@@ -55,7 +59,8 @@
       "balance-scale",
       "rotating-poster-frame",
       "curvy-shelf",
-      "anamorphic-crystal-engraving"
+      "anamorphic-crystal-engraving",
+      "walnut-maple-lamp"
     ],
     "digital": []
   }
