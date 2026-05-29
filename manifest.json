@@ -1,0 +1,197 @@
+{
+  "physical": [
+    {
+      "id": "kumiko-style-lamp",
+      "title": "Kumiko Style Lamp",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Kumiko-Style-Lamp-1.jpeg",
+        "img/Kumiko-Style-Lamp-2.jpeg",
+        "img/Kumiko-Style-Lamp-3.jpeg",
+        "img/Kumiko-Style-Lamp-4.jpeg"
+      ]
+    },
+    {
+      "id": "cutting-board",
+      "title": "Cutting Board",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Cutting-Board-1.jpeg",
+        "img/Cutting-Board-2.jpeg"
+      ]
+    },
+    {
+      "id": "charleston-union-pier-map",
+      "title": "Charleston Union Pier Map",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Charleston-Union-Pier-Map-1.jpeg",
+        "img/Charleston-Union-Pier-Map-2.jpeg",
+        "img/Charleston-Union-Pier-Map-3.jpeg"
+      ]
+    },
+    {
+      "id": "balance-scale",
+      "title": "Balance Scale",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Balance-Scale.jpeg"
+      ]
+    },
+    {
+      "id": "tree-bookshelf",
+      "title": "Tree Bookshelf",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Tree-Bookshelf.jpeg"
+      ]
+    },
+    {
+      "id": "rotating-poster-frame",
+      "title": "Rotating Poster Frame",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Rotating-Poster-Frame-1.mp4",
+        "img/Rotating-Poster-Frame-2.jpeg",
+        "img/Rotating-Poster-Frame-3.mp4",
+        "img/Rotating-Poster-Frame-4.jpeg"
+      ]
+    },
+    {
+      "id": "curvy-shelf",
+      "title": "Curvy Shelf",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Curvy-Shelf-1.jpeg",
+        "img/Curvy-Shelf-2.jpeg"
+      ]
+    },
+    {
+      "id": "anamorphic-crystal-engraving",
+      "title": "Anamorphic Crystal Engraving",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Anamorphic-Crystal-Engraving-1.jpeg",
+        "img/Anamorphic-Crystal-Engraving-2.jpeg"
+      ]
+    },
+    {
+      "id": "walnut-fireplace-mantle",
+      "title": "Walnut Fireplace Mantle",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Walnut-Fireplace-Mantle.jpeg"
+      ]
+    },
+    {
+      "id": "walnut-maple-lamp",
+      "title": "Walnut Maple Lamp",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Walnut-Maple-Lamp.jpeg"
+      ]
+    },
+    {
+      "id": "steel-paper-towel-roll-holder",
+      "title": "Steel Paper Towel Roll Holder",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Steel-Paper-Towel-Roll-Holder.jpeg"
+      ]
+    },
+    {
+      "id": "habit-tracker",
+      "title": "Habit Tracker",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Habit-Tracker.jpeg"
+      ]
+    },
+    {
+      "id": "slate-coasters",
+      "title": "Slate Coasters",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Slate-Coasters.jpeg"
+      ]
+    },
+    {
+      "id": "cork-engraved-coasters",
+      "title": "Cork Engraved Coasters",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Cork-Engraved-Coasters.jpeg"
+      ]
+    },
+    {
+      "id": "walnut-maple-tongs",
+      "title": "Walnut Maple Tongs",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Walnut-Maple-Tongs-1.jpeg",
+        "img/Walnut-Maple-Tongs-2.jpeg"
+      ]
+    },
+    {
+      "id": "airbnb-sign",
+      "title": "AirBnB Sign",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/AirBnB-Sign.jpeg"
+      ]
+    },
+    {
+      "id": "cat-sign",
+      "title": "Cat Sign",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Cat-Sign.jpeg"
+      ]
+    },
+    {
+      "id": "paper-towel-roll-holder",
+      "title": "Paper Towel Roll Holder",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Paper-Towel-Roll-Holder.jpeg"
+      ]
+    }
+  ],
+  "digital": []
+}
