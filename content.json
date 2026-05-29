@@ -4,11 +4,15 @@
       "title": "Kumiko Style Lamp",
       "desc": "Walnut and Purpleheart Beams, with Maple base. UV laser engraved and cut glass topper, CNC engraved diffuser.",
       "section": "physical"
+    },
+    "cutting-board": {
+      "title": "Cutting Board",
+      "desc": "Maple, Walnut, Purpleheart, Padauk, with Brass + Rubber Feet",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
-      "cutting-board",
       "charleston-union-pier-map",
       "balance-scale",
       "tree-bookshelf",
@@ -25,7 +29,8 @@
       "airbnb-sign",
       "cat-sign",
       "paper-towel-roll-holder",
-      "kumiko-style-lamp"
+      "kumiko-style-lamp",
+      "cutting-board"
     ],
     "digital": []
   }
