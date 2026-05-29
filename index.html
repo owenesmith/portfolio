@@ -240,10 +240,15 @@
   // ====== Load data (studio API if present, else static manifest) ======
   async function loadData() {
     API_OK = false;
-    try {
-      const r = await fetch('/api/state', { cache: 'no-store' });
-      if (r.ok) { const j = await r.json(); API_OK = true; CONTENT = j.content || CONTENT; MANIFEST = j.manifest; }
-    } catch (e) { /* no studio */ }
+    // Only the local studio (localhost) serves the authoring API; on the live
+    // site we skip the probe and read the static manifest directly.
+    const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+    if (local) {
+      try {
+        const r = await fetch('/api/state', { cache: 'no-store' });
+        if (r.ok) { const j = await r.json(); API_OK = true; CONTENT = j.content || CONTENT; MANIFEST = j.manifest; }
+      } catch (e) { /* studio not running */ }
+    }
     if (!API_OK) {
       MANIFEST = await (await fetch('manifest.json', { cache: 'no-store' })).json();
       applyLocalOrder();
