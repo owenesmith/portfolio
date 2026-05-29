@@ -16,32 +16,22 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   [hidden] { display: none !important; }
   html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg); color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif; font-size: 16px; line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
   /* ---------- Edit bar ---------- */
-  .edit-bar {
-    position: sticky; top: 0; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    padding: 0.6rem 2rem; background: var(--ink); color: var(--bg); font-size: 0.85rem;
-  }
-  .edit-bar button {
-    font: inherit; font-size: 0.8rem; background: var(--bg-card); color: var(--ink);
-    border: none; padding: 0.32rem 0.7rem; border-radius: 5px; cursor: pointer; margin-left: 0.4rem;
-  }
+  .edit-bar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.6rem 2rem; background: var(--ink); color: var(--bg); font-size: 0.85rem; flex-wrap: wrap; }
+  .edit-bar button { font: inherit; font-size: 0.8rem; background: var(--bg-card); color: var(--ink); border: none; padding: 0.32rem 0.7rem; border-radius: 5px; cursor: pointer; margin-left: 0.4rem; }
   .edit-bar button:hover { background: #fff; }
+  .edit-bar input { font: inherit; font-size: 0.8rem; padding: 0.3rem 0.5rem; border: none; border-radius: 5px; background: #efe9df; color: var(--ink); width: 18rem; max-width: 50vw; }
+  .edit-bar a { color: #e6d6c2; }
   #publish-btn { background: var(--accent); color: #fff; }
   #publish-btn:hover { background: #a0461f; }
+  .gh-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #c98b4b; margin-right: 0.35rem; vertical-align: middle; }
+  .gh-dot.on { background: #6fae6f; }
 
   /* ---------- Header ---------- */
   header { padding: 4rem 2rem 2.5rem; max-width: 1200px; margin: 0 auto; }
-  .site-title {
-    font-family: 'Fraunces', serif; font-weight: 500; font-size: clamp(2.5rem, 6vw, 4.5rem);
-    letter-spacing: -0.02em; line-height: 1; font-variation-settings: "opsz" 144;
-  }
+  .site-title { font-family: 'Fraunces', serif; font-weight: 500; font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: -0.02em; line-height: 1; font-variation-settings: "opsz" 144; }
   .site-title em { font-style: italic; font-weight: 400; color: var(--accent); }
   .site-sub { margin-top: 1.25rem; font-size: 1rem; color: var(--ink-soft); max-width: 40ch; }
 
@@ -50,11 +40,7 @@
   .section { scroll-margin-top: 1.25rem; }
   #digital { margin-top: 4.5rem; padding-top: 3rem; border-top: 1px solid var(--rule); }
   .toggle { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 2.25rem; }
-  .toggle a {
-    font-family: 'Fraunces', serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400;
-    letter-spacing: -0.02em; line-height: 1; text-decoration: none; color: var(--ink-soft);
-    opacity: 0.4; transition: opacity 0.25s ease, color 0.25s ease;
-  }
+  .toggle a { font-family: 'Fraunces', serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1; text-decoration: none; color: var(--ink-soft); opacity: 0.4; transition: opacity 0.25s ease, color 0.25s ease; }
   .toggle a:hover { opacity: 0.8; }
   .toggle a.active { color: var(--ink); opacity: 1; font-weight: 600; }
   .toggle .divider { width: 1px; align-self: stretch; min-height: 1.7rem; background: var(--rule); }
@@ -63,62 +49,36 @@
 
   /* ---------- Card ---------- */
   .card { display: flex; flex-direction: column; position: relative; }
-  .frame {
-    position: relative; width: 100%; aspect-ratio: var(--frame-aspect);
-    background: var(--card-accent, var(--bg-card)); border: 1px solid var(--rule); overflow: hidden;
-  }
-  .frame img, .frame video {
-    position: absolute; inset: var(--mat);
-    width: calc(100% - 2 * var(--mat)); height: calc(100% - 2 * var(--mat));
-    object-fit: contain; object-position: center; background: var(--card-accent, var(--bg-card));
-    opacity: 0; transition: opacity 0.35s ease; -webkit-user-drag: none; user-select: none;
-  }
+  .frame { position: relative; width: 100%; aspect-ratio: var(--frame-aspect); background: var(--card-accent, var(--bg-card)); border: 1px solid var(--rule); overflow: hidden; }
+  .frame img, .frame video { position: absolute; inset: var(--mat); width: calc(100% - 2 * var(--mat)); height: calc(100% - 2 * var(--mat)); object-fit: contain; object-position: center; background: var(--card-accent, var(--bg-card)); opacity: 0; transition: opacity 0.35s ease; -webkit-user-drag: none; user-select: none; }
   .frame img.active, .frame video.active { opacity: 1; }
-
-  .nav {
-    position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;
-    border: none; background: rgba(251, 248, 242, 0.85); backdrop-filter: blur(4px);
-    color: var(--ink); font-family: 'Fraunces', serif; font-size: 1.25rem; cursor: pointer;
-    opacity: 0; transition: opacity 0.2s ease, background 0.2s ease; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; z-index: 2;
-  }
+  .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border: none; background: rgba(251, 248, 242, 0.85); backdrop-filter: blur(4px); color: var(--ink); font-family: 'Fraunces', serif; font-size: 1.25rem; cursor: pointer; opacity: 0; transition: opacity 0.2s ease, background 0.2s ease; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; }
   .frame:hover .nav { opacity: 1; }
   .nav:hover { background: var(--bg-card); }
   .nav.prev { left: 0.75rem; } .nav.next { right: 0.75rem; }
   @media (hover: none) { .nav { opacity: 0.9; } }
-
   .dots { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 2; }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(251, 248, 242, 0.55); border: 1px solid rgba(31, 26, 20, 0.25); transition: background 0.2s ease; }
   .dot.active { background: var(--bg-card); border-color: var(--bg-card); }
-
   .meta { margin-top: 1rem; display: flex; align-items: baseline; gap: 0.75rem; }
   .index-num { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 0.85rem; color: var(--card-accent, var(--ink-soft)); min-width: 1.5rem; }
   .title { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.25rem; letter-spacing: -0.01em; line-height: 1.2; }
 
   /* ---------- Description + read more ---------- */
   .desc-wrap { margin-top: 0.5rem; margin-left: 2.25rem; }
-  .readmore {
-    background: none; border: none; padding: 0; font: inherit; font-size: 0.82rem;
-    color: var(--card-accent, var(--accent)); cursor: pointer; border-bottom: 1px solid transparent;
-  }
+  .readmore { background: none; border: none; padding: 0; font: inherit; font-size: 0.82rem; color: var(--card-accent, var(--accent)); cursor: pointer; border-bottom: 1px solid transparent; }
   .readmore:hover { border-bottom-color: currentColor; }
   .desc-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
   .desc-panel .desc { margin-top: 0.55rem; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
 
   /* ---------- Digital placeholders ---------- */
-  .placeholder-card .ph-label {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-style: italic; font-size: 1.05rem; color: rgba(251, 248, 242, 0.78);
-  }
+  .placeholder-card .ph-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; font-size: 1.05rem; color: rgba(251, 248, 242, 0.78); }
   .placeholder-card .title { color: var(--ink-soft); font-weight: 400; }
 
   /* ---------- Authoring ---------- */
-  .editbtn {
-    margin-left: auto; background: none; border: 1px solid var(--rule); border-radius: 4px;
-    color: var(--ink-soft); cursor: pointer; font: inherit; font-size: 0.72rem; padding: 0.1rem 0.45rem;
-  }
+  .editbtn { margin-left: auto; background: none; border: 1px solid var(--rule); border-radius: 4px; color: var(--ink-soft); cursor: pointer; font: inherit; font-size: 0.72rem; padding: 0.1rem 0.45rem; }
   .editbtn:hover { color: var(--accent); border-color: var(--accent); }
-  body:not(.edit-mode) .editbtn, body:not(.api-on) .editbtn { display: none; }
+  body:not(.edit-mode) .editbtn { display: none; }
   .editor { margin-top: 0.7rem; display: flex; flex-direction: column; gap: 0.45rem; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 7px; padding: 0.7rem; }
   .editor input, .editor textarea, .editor select { font: inherit; font-size: 0.85rem; padding: 0.32rem 0.45rem; border: 1px solid var(--rule); border-radius: 4px; background: #fff; color: var(--ink); width: 100%; }
   .editor textarea { min-height: 3.4rem; resize: vertical; }
@@ -127,7 +87,6 @@
   .editor button { cursor: pointer; border: 1px solid var(--rule); border-radius: 4px; background: var(--ink); color: var(--bg); padding: 0.28rem 0.65rem; font: inherit; font-size: 0.8rem; }
   .editor .ed-cancel, .editor .ed-hide { background: var(--bg-card); color: var(--ink-soft); }
   .editor .ed-hide { margin-left: auto; }
-
   body.edit-mode .card[draggable] { cursor: grab; }
   body.edit-mode .card[draggable]:active { cursor: grabbing; }
   body.edit-mode .frame { outline: 2px dashed var(--card-accent, var(--ink)); outline-offset: 4px; }
@@ -138,12 +97,7 @@
   .card.is-new .frame { outline: 2px solid var(--accent); }
   .newbadge { position: absolute; top: 8px; left: 8px; z-index: 3; background: var(--accent); color: #fff; font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 3px; letter-spacing: 0.02em; }
   body:not(.edit-mode) .newbadge { display: none; }
-
-  body.dragging-files::after {
-    content: 'Drop images to add'; position: fixed; inset: 0; z-index: 100;
-    background: rgba(31, 26, 20, 0.62); color: var(--bg); display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif; font-style: italic; font-size: clamp(1.5rem, 4vw, 2.5rem);
-  }
+  body.dragging-files::after { content: 'Drop images to add'; position: fixed; inset: 0; z-index: 100; background: rgba(31, 26, 20, 0.62); color: var(--bg); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; font-size: clamp(1.5rem, 4vw, 2.5rem); }
 
   /* ---------- Footer ---------- */
   footer { max-width: 1200px; margin: 0 auto; padding: 2rem; border-top: 1px solid var(--rule); font-size: 0.85rem; color: var(--ink-soft); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
@@ -162,7 +116,8 @@
     header { padding: 2.5rem 1.25rem 2rem; }
     main { padding: 1.25rem 1.25rem 4rem; }
     .grid { gap: 2.5rem 1.25rem; }
-    .edit-bar { padding: 0.6rem 1.25rem; flex-wrap: wrap; }
+    .edit-bar { padding: 0.6rem 1.25rem; }
+    .edit-bar input { width: 100%; max-width: none; }
     :root { --mat: 8px; }
   }
 </style>
@@ -172,6 +127,16 @@
 <div id="edit-bar" class="edit-bar" hidden>
   <span class="edit-bar__msg"></span>
   <span class="edit-bar__actions">
+    <span id="gh-area" hidden>
+      <span id="gh-status"><span class="gh-dot"></span>GitHub: not connected</span>
+      <button id="gh-connect" type="button">Connect GitHub</button>
+      <button id="gh-disconnect" type="button" hidden>Disconnect</button>
+      <span id="gh-form" hidden>
+        <input id="gh-token" type="password" placeholder="Paste GitHub token (Contents: R/W)" aria-label="GitHub token">
+        <button id="gh-token-save" type="button">Save</button>
+        <a id="gh-help" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">create token</a>
+      </span>
+    </span>
     <button id="publish-btn" type="button" hidden>Publish to GitHub</button>
     <button id="copy-order" type="button">Copy order</button>
     <button id="reset-order" type="button">Reset</button>
@@ -227,51 +192,108 @@
   const ORDER_KEY = "portfolio.order.v1";
   const DIGITAL_PLACEHOLDERS = ["#4a4a52", "#6b4423", "#5e5e68"];
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const pretty = (o) => JSON.stringify(o, null, 2) + "\n";
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  // Shared grouping helpers (mirror generate.mjs so the browser & generator agree)
+  const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const baseOf = (name) => name.replace(/\.[^.]+$/, '').replace(/-\d+$/, '');
+  const suffixOf = (name) => { const m = name.replace(/\.[^.]+$/, '').match(/-(\d+)$/); return m ? +m[1] : -1; };
+  const titleFromBase = (b) => b.replace(/-+/g, ' ').trim();
 
   // ====== State ======
   let API_OK = false;
   let MANIFEST = { physical: [], digital: [] };
   let CONTENT = { items: {}, order: { physical: [], digital: [] } };
   let editMode = false, carousels = [], conductorTimer = null;
-
+  const previewUrls = {};   // freshly-added images shown locally before the Pages rebuild
   const gridP = document.getElementById('grid');
   const gridD = document.getElementById('digital-grid');
 
-  // ====== Load data (studio API if present, else static manifest) ======
+  // ====== GitHub backend (commit straight to the repo) ======
+  const GH = {
+    owner: 'owenesmith', repo: 'portfolio', branch: 'main',
+    token: () => localStorage.getItem('gh.token') || '',
+    connected: () => !!localStorage.getItem('gh.token'),
+    async api(p, opts = {}) {
+      const r = await fetch('https://api.github.com' + p, { cache: 'no-store', ...opts, headers: { Authorization: 'Bearer ' + GH.token(), Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(opts.headers || {}) } });
+      if (!r.ok) throw new Error('GitHub ' + r.status + ': ' + (await r.text()).slice(0, 160));
+      return r.status === 204 ? {} : r.json();
+    },
+  };
+  async function blobToBase64(blob) {
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    let bin = ''; const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    return btoa(bin);
+  }
+  // files: [{path, text}] or [{path, blobBase64}] — committed as ONE commit.
+  // Retries if the branch ref moved under us (GitHub eventual consistency).
+  async function ghCommit(files, message) {
+    const { owner, repo, branch } = GH;
+    let lastErr;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const ref = await GH.api(`/repos/${owner}/${repo}/git/ref/heads/${branch}`);
+        const headSha = ref.object.sha;
+        const headCommit = await GH.api(`/repos/${owner}/${repo}/git/commits/${headSha}`);
+        const tree = [];
+        for (const f of files) {
+          if (f.blobBase64 != null) {
+            const blob = await GH.api(`/repos/${owner}/${repo}/git/blobs`, { method: 'POST', body: JSON.stringify({ content: f.blobBase64, encoding: 'base64' }) });
+            tree.push({ path: f.path, mode: '100644', type: 'blob', sha: blob.sha });
+          } else {
+            tree.push({ path: f.path, mode: '100644', type: 'blob', content: f.text });
+          }
+        }
+        const newTree = await GH.api(`/repos/${owner}/${repo}/git/trees`, { method: 'POST', body: JSON.stringify({ base_tree: headCommit.tree.sha, tree }) });
+        const commit = await GH.api(`/repos/${owner}/${repo}/git/commits`, { method: 'POST', body: JSON.stringify({ message, tree: newTree.sha, parents: [headSha] }) });
+        await GH.api(`/repos/${owner}/${repo}/git/refs/heads/${branch}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha }) });
+        return commit.sha;
+      } catch (e) {
+        lastErr = e;
+        if (/fast forward|\b422\b|\b409\b/.test(e.message) && attempt < 3) { await sleep(700); continue; }
+        throw e;
+      }
+    }
+    throw lastErr;
+  }
+
+  // Resize/recompress an image entirely in the browser (mirrors generate.mjs).
+  async function optimizeImage(file, maxEdge = 1400, quality = 0.82) {
+    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const scale = Math.min(1, maxEdge / Math.max(bmp.width, bmp.height));
+    const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+    const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+    return await new Promise(res => canvas.toBlob(res, 'image/jpeg', quality));
+  }
+
+  // ====== Load data ======
   async function loadData() {
     API_OK = false;
-    // Only the local studio (localhost) serves the authoring API; on the live
-    // site we skip the probe and read the static manifest directly.
     const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
     if (local) {
-      try {
-        const r = await fetch('/api/state', { cache: 'no-store' });
-        if (r.ok) { const j = await r.json(); API_OK = true; CONTENT = j.content || CONTENT; MANIFEST = j.manifest; }
-      } catch (e) { /* studio not running */ }
+      try { const r = await fetch('/api/state', { cache: 'no-store' }); if (r.ok) { const j = await r.json(); API_OK = true; CONTENT = j.content || CONTENT; MANIFEST = j.manifest; } } catch (e) {}
     }
     if (!API_OK) {
       MANIFEST = await (await fetch('manifest.json', { cache: 'no-store' })).json();
+      try { const c = await fetch('content.json', { cache: 'no-store' }); if (c.ok) CONTENT = await c.json(); } catch (e) {}
       applyLocalOrder();
     }
     document.body.classList.toggle('api-on', API_OK);
   }
   function applyLocalOrder() {
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem(ORDER_KEY) || 'null'); } catch (e) {}
+    let saved = null; try { saved = JSON.parse(localStorage.getItem(ORDER_KEY) || 'null'); } catch (e) {}
     if (!Array.isArray(saved)) return;
     const rank = id => { const i = saved.indexOf(id); return i < 0 ? 1e9 : i; };
     MANIFEST.physical = MANIFEST.physical.slice().sort((a, b) => rank(a.id) - rank(b.id));
   }
   const knownIds = () => new Set([...(CONTENT.order?.physical || []), ...(CONTENT.order?.digital || [])]);
+  const canEdit = () => API_OK || GH.connected();
 
-  // ====== Conductor (cascading auto-rotation) ======
-  function runWave() {
-    carousels.forEach((c, i) => setTimeout(() => {
-      if (c.paused || document.hidden) return;
-      if (c.skip > 0) { c.skip--; return; }
-      c.advance();
-    }, i * STAGGER_MS));
-  }
+  // ====== Conductor ======
+  function runWave() { carousels.forEach((c, i) => setTimeout(() => { if (c.paused || document.hidden) return; if (c.skip > 0) { c.skip--; return; } c.advance(); }, i * STAGGER_MS)); }
   function startConductor() { stopConductor(); if (editMode || reduceMotion || !carousels.length) return; conductorTimer = setInterval(runWave, CYCLE_MS); }
   function stopConductor() { if (conductorTimer) { clearInterval(conductorTimer); conductorTimer = null; } }
   document.addEventListener('visibilitychange', () => { document.hidden ? stopConductor() : startConductor(); });
@@ -282,35 +304,21 @@
     card.className = 'card' + (isNew ? ' is-new' : '');
     card.dataset.title = p.title; card.dataset.id = p.id; card.dataset.section = section;
     card.style.setProperty('--card-accent', p.color || palette[i % palette.length]);
-
     const multi = p.photos.length > 1;
     const media = p.photos.map((src, idx) => {
-      const a = idx === 0 ? ' active' : '';
+      const shown = previewUrls[src] || src; const a = idx === 0 ? ' active' : '';
       return isVideo(src)
-        ? `<video class="media${a}" src="${esc(src)}" muted loop playsinline preload="metadata" draggable="false" aria-label="${esc(p.title)} — clip ${idx + 1}"></video>`
-        : `<img class="media${a}" src="${esc(src)}" alt="${esc(p.title)} — photo ${idx + 1}" loading="lazy" draggable="false">`;
+        ? `<video class="media${a}" src="${esc(shown)}" muted loop playsinline preload="metadata" draggable="false" aria-label="${esc(p.title)} — clip ${idx + 1}"></video>`
+        : `<img class="media${a}" src="${esc(shown)}" alt="${esc(p.title)} — photo ${idx + 1}" loading="lazy" draggable="false">`;
     }).join('');
     const dots = multi ? `<div class="dots">${p.photos.map((_, idx) => `<span class="dot ${idx === 0 ? 'active' : ''}"></span>`).join('')}</div>` : '';
     const arrows = multi ? `<button class="nav prev" aria-label="Previous">‹</button><button class="nav next" aria-label="Next">›</button>` : '';
-    const descBlock = p.desc ? `
-      <div class="desc-wrap">
-        <button class="readmore" type="button" aria-expanded="false">Read more</button>
-        <div class="desc-panel"><p class="desc">${esc(p.desc)}</p></div>
-      </div>` : '';
-
+    const descBlock = p.desc ? `<div class="desc-wrap"><button class="readmore" type="button" aria-expanded="false">Read more</button><div class="desc-panel"><p class="desc">${esc(p.desc)}</p></div></div>` : '';
     card.innerHTML = `
-      <div class="frame">
-        ${isNew ? '<span class="newbadge">New</span>' : ''}
-        ${media} ${arrows} ${dots}
-      </div>
-      <div class="meta">
-        <span class="index-num">${String(i + 1).padStart(2, '0')}</span>
-        <h2 class="title">${esc(p.title)}</h2>
-        <button class="editbtn" type="button">✎ Edit</button>
-      </div>
+      <div class="frame">${isNew ? '<span class="newbadge">New</span>' : ''}${media}${arrows}${dots}</div>
+      <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">${esc(p.title)}</h2><button class="editbtn" type="button">✎ Edit</button></div>
       ${descBlock}`;
 
-    // Carousel
     const frame = card.querySelector('.frame');
     const items = frame.querySelectorAll('.media');
     const dotEls = frame.querySelectorAll('.dot');
@@ -318,11 +326,7 @@
     const syncVideo = () => items.forEach((el, idx) => { if (el.tagName === 'VIDEO') { idx === pos ? el.play().catch(() => {}) : (el.pause(), el.currentTime = 0); } });
     syncVideo();
     if (multi) {
-      const show = (n) => {
-        items[pos].classList.remove('active'); dotEls[pos].classList.remove('active');
-        pos = (n + items.length) % items.length;
-        items[pos].classList.add('active'); dotEls[pos].classList.add('active'); syncVideo();
-      };
+      const show = (n) => { items[pos].classList.remove('active'); dotEls[pos].classList.remove('active'); pos = (n + items.length) % items.length; items[pos].classList.add('active'); dotEls[pos].classList.add('active'); syncVideo(); };
       const ctrl = { paused: false, skip: 0, advance: () => show(pos + 1) };
       carousels.push(ctrl);
       card.addEventListener('mouseenter', () => { ctrl.paused = true; });
@@ -330,167 +334,156 @@
       frame.querySelector('.prev').addEventListener('click', () => { show(pos - 1); ctrl.skip = SKIP_CYCLES; });
       frame.querySelector('.next').addEventListener('click', () => { show(pos + 1); ctrl.skip = SKIP_CYCLES; });
     }
-
-    // Read more
     if (p.desc) {
-      const btn = card.querySelector('.readmore');
-      const panel = card.querySelector('.desc-panel');
-      btn.addEventListener('click', () => {
-        const open = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!open));
-        panel.style.maxHeight = open ? '0px' : panel.scrollHeight + 'px';
-        btn.textContent = open ? 'Read more' : 'Close';
-      });
+      const btn = card.querySelector('.readmore'), panel = card.querySelector('.desc-panel');
+      btn.addEventListener('click', () => { const open = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!open)); panel.style.maxHeight = open ? '0px' : panel.scrollHeight + 'px'; btn.textContent = open ? 'Read more' : 'Close'; });
     }
-
-    // Editor (only meaningful with the studio API)
     card.querySelector('.editbtn').addEventListener('click', () => openEditor(card, p, section));
     if (editMode) makeDraggable(card);
     return card;
   }
-
   function placeholderCard(color, i) {
-    return `<article class="card placeholder-card" style="--card-accent:${color}">
-      <div class="frame"><span class="ph-label">Coming soon</span></div>
-      <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">Digital project</h2></div>
-    </article>`;
+    return `<article class="card placeholder-card" style="--card-accent:${color}"><div class="frame"><span class="ph-label">Coming soon</span></div><div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">Digital project</h2></div></article>`;
   }
-
-  // ====== Render ======
   function render() {
     carousels = [];
     const known = knownIds();
     gridP.innerHTML = '';
-    MANIFEST.physical.forEach((p, i) => gridP.appendChild(buildCard(p, i, 'physical', editMode && API_OK && !known.has(p.id))));
-    if (MANIFEST.digital && MANIFEST.digital.length) {
-      gridD.innerHTML = '';
-      MANIFEST.digital.forEach((p, i) => gridD.appendChild(buildCard(p, i, 'digital', editMode && API_OK && !known.has(p.id))));
-    } else {
-      gridD.innerHTML = DIGITAL_PLACEHOLDERS.map((c, i) => placeholderCard(c, i)).join('');
-    }
+    MANIFEST.physical.forEach((p, i) => gridP.appendChild(buildCard(p, i, 'physical', editMode && canEdit() && !known.has(p.id))));
+    if (MANIFEST.digital && MANIFEST.digital.length) { gridD.innerHTML = ''; MANIFEST.digital.forEach((p, i) => gridD.appendChild(buildCard(p, i, 'digital', editMode && canEdit() && !known.has(p.id)))); }
+    else { gridD.innerHTML = DIGITAL_PLACEHOLDERS.map((c, i) => placeholderCard(c, i)).join(''); }
     startConductor();
+  }
+
+  // ====== Persistence (studio API → GitHub API → local preview) ======
+  async function persist(message, extraFiles = []) {
+    if (API_OK) {
+      try { const r = await fetch('/api/content', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CONTENT) }); if (!r.ok) throw new Error(await r.text()); await loadData(); render(); flashMsg(message + ' — saved.'); }
+      catch (e) { flashMsg('Save failed: ' + e.message); }
+    } else if (GH.connected()) {
+      try {
+        flashMsg('Committing to GitHub…');
+        await ghCommit([{ path: 'content.json', text: pretty(CONTENT) }, { path: 'manifest.json', text: pretty(MANIFEST) }, ...extraFiles], message);
+        render(); flashMsg('Committed ✓ — live on owenesmith.com in ~1 min.');
+      } catch (e) { flashMsg('GitHub commit failed: ' + e.message); }
+    } else {
+      localStorage.setItem(ORDER_KEY, JSON.stringify(MANIFEST.physical.map(p => p.id)));
+      render(); flashMsg('Preview only — Connect GitHub (top bar) to save to the live site.');
+    }
   }
 
   // ====== Inline editor ======
   let openEditorEl = null;
   function openEditor(card, p, section) {
-    if (!API_OK) { alert('Editing runs through the local studio.\nRun:  node studio.mjs\nthen open this page from there.'); return; }
+    if (!canEdit()) { flashMsg('Connect GitHub (top bar) or run the local studio to edit.'); return; }
     if (openEditorEl) openEditorEl.remove();
-    const ed = document.createElement('div');
-    ed.className = 'editor';
+    const ed = document.createElement('div'); ed.className = 'editor';
     ed.innerHTML = `
       <input class="ed-title" value="${esc(p.title)}" placeholder="Title">
       <textarea class="ed-desc" placeholder="Description (optional)">${esc(p.desc)}</textarea>
-      <div class="ed-row">
-        <label>Section</label>
-        <select class="ed-section">
-          <option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option>
-          <option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option>
-        </select>
-        <button class="ed-save" type="button">Save</button>
-        <button class="ed-cancel" type="button">Cancel</button>
-        <button class="ed-hide" type="button">Hide</button>
+      <div class="ed-row"><label>Section</label>
+        <select class="ed-section"><option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option><option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option></select>
+        <button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button><button class="ed-hide" type="button">Hide</button>
       </div>`;
     card.appendChild(ed); openEditorEl = ed;
     ed.querySelector('.ed-cancel').addEventListener('click', () => { ed.remove(); openEditorEl = null; });
     ed.querySelector('.ed-save').addEventListener('click', async () => {
+      const title = ed.querySelector('.ed-title').value.trim(), desc = ed.querySelector('.ed-desc').value.trim(), newSection = ed.querySelector('.ed-section').value;
       CONTENT.items = CONTENT.items || {};
-      CONTENT.items[p.id] = {
-        title: ed.querySelector('.ed-title').value.trim() || undefined,
-        desc: ed.querySelector('.ed-desc').value.trim() || undefined,
-        section: ed.querySelector('.ed-section').value,
-        color: (CONTENT.items[p.id] || {}).color || undefined,
-      };
-      ensureOrder(p.id, ed.querySelector('.ed-section').value);
-      await saveContent('Saved.');
+      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined };
+      ensureOrder(p.id, newSection);
+      // reflect in the in-memory manifest so the committed manifest is correct
+      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; }
+      openEditorEl = null;
+      await persist('Edit “' + (title || p.title) + '”');
     });
     ed.querySelector('.ed-hide').addEventListener('click', async () => {
-      if (!confirm('Hide "' + p.title + '" from the site?')) return;
-      CONTENT.items = CONTENT.items || {};
-      CONTENT.items[p.id] = { ...(CONTENT.items[p.id] || {}), hidden: true };
-      await saveContent('Hidden.');
+      if (!confirm('Hide “' + p.title + '” from the site?')) return;
+      CONTENT.items = CONTENT.items || {}; CONTENT.items[p.id] = { ...(CONTENT.items[p.id] || {}), hidden: true };
+      for (const s of ['physical', 'digital']) MANIFEST[s] = MANIFEST[s].filter(x => x.id !== p.id);
+      openEditorEl = null;
+      await persist('Hide “' + p.title + '”');
     });
+  }
+  const findProject = (id) => [...MANIFEST.physical, ...MANIFEST.digital].find(p => p.id === id);
+  function moveProject(id, from, to) {
+    if (from === to) return;
+    const idx = MANIFEST[from].findIndex(p => p.id === id); if (idx < 0) return;
+    const [proj] = MANIFEST[from].splice(idx, 1); MANIFEST[to].push(proj);
   }
   function ensureOrder(id, section) {
     CONTENT.order = CONTENT.order || { physical: [], digital: [] };
     for (const s of ['physical', 'digital']) CONTENT.order[s] = (CONTENT.order[s] || []).filter(x => x !== id);
-    CONTENT.order[section] = CONTENT.order[section] || [];
-    if (!CONTENT.order[section].includes(id)) CONTENT.order[section].push(id);
-  }
-  async function saveContent(msg) {
-    try {
-      const r = await fetch('/api/content', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CONTENT) });
-      if (!r.ok) throw new Error(await r.text());
-      openEditorEl = null;
-      await loadData(); render(); flashMsg(msg || 'Saved.');
-    } catch (e) { flashMsg('Save failed: ' + e.message); }
+    CONTENT.order[section] = CONTENT.order[section] || []; if (!CONTENT.order[section].includes(id)) CONTENT.order[section].push(id);
   }
 
-  // ====== Drag to reorder (within a section) ======
+  // ====== Drag to reorder ======
   let dragId = null;
   function makeDraggable(card) {
     card.setAttribute('draggable', 'true');
     card.addEventListener('dragstart', (e) => { dragId = card.dataset.id; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); card.classList.add('dragging'); });
     card.addEventListener('dragend', () => { dragId = null; document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging', 'drop-before', 'drop-after')); });
-    card.addEventListener('dragover', (e) => {
-      if (!dragId || card.dataset.id === dragId || card.dataset.section !== draggedSection()) return;
-      e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-      const list = MANIFEST[card.dataset.section];
-      const from = list.findIndex(p => p.id === dragId), to = list.findIndex(p => p.id === card.dataset.id);
-      card.classList.toggle('drop-after', from < to); card.classList.toggle('drop-before', from > to);
-    });
+    card.addEventListener('dragover', (e) => { if (!dragId || card.dataset.id === dragId || card.dataset.section !== draggedSection()) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; const list = MANIFEST[card.dataset.section]; const from = list.findIndex(p => p.id === dragId), to = list.findIndex(p => p.id === card.dataset.id); card.classList.toggle('drop-after', from < to); card.classList.toggle('drop-before', from > to); });
     card.addEventListener('dragleave', () => card.classList.remove('drop-before', 'drop-after'));
     card.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const section = card.dataset.section;
+      e.preventDefault(); const section = card.dataset.section;
       if (!dragId || card.dataset.id === dragId || section !== draggedSection()) return;
-      const list = MANIFEST[section];
-      const from = list.findIndex(p => p.id === dragId), to = list.findIndex(p => p.id === card.dataset.id);
-      const [moved] = list.splice(from, 1);
-      const insertAt = list.findIndex(p => p.id === card.dataset.id);
-      list.splice(from < to ? insertAt + 1 : insertAt, 0, moved);
-      persistOrder(section);
-      render();
+      const list = MANIFEST[section]; const from = list.findIndex(p => p.id === dragId), to = list.findIndex(p => p.id === card.dataset.id);
+      const [moved] = list.splice(from, 1); const at = list.findIndex(p => p.id === card.dataset.id);
+      list.splice(from < to ? at + 1 : at, 0, moved);
+      CONTENT.order = CONTENT.order || {}; CONTENT.order[section] = list.map(p => p.id);
+      persist('Reorder ' + section);
     });
   }
-  function draggedSection() {
-    for (const s of ['physical', 'digital']) if (MANIFEST[s].some(p => p.id === dragId)) return s;
-    return 'physical';
-  }
-  async function persistOrder(section) {
-    if (API_OK) {
-      CONTENT.order = CONTENT.order || {};
-      CONTENT.order[section] = MANIFEST[section].map(p => p.id);
-      try { await fetch('/api/content', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CONTENT) }); } catch (e) {}
-    } else {
-      localStorage.setItem(ORDER_KEY, JSON.stringify(MANIFEST.physical.map(p => p.id)));
-    }
-  }
+  function draggedSection() { for (const s of ['physical', 'digital']) if (MANIFEST[s].some(p => p.id === dragId)) return s; return 'physical'; }
 
-  // ====== Add images: drop anywhere (uploads to studio) ======
+  // ====== Add images (drop anywhere) ======
   let dragDepth = 0;
-  window.addEventListener('dragover', (e) => { if (editMode && API_OK && [...(e.dataTransfer?.types || [])].includes('Files')) e.preventDefault(); });
-  window.addEventListener('dragenter', (e) => { if (editMode && API_OK && [...(e.dataTransfer?.types || [])].includes('Files')) { dragDepth++; document.body.classList.add('dragging-files'); } });
+  const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+  window.addEventListener('dragover', (e) => { if (editMode && canEdit() && hasFiles(e)) e.preventDefault(); });
+  window.addEventListener('dragenter', (e) => { if (editMode && canEdit() && hasFiles(e)) { dragDepth++; document.body.classList.add('dragging-files'); } });
   window.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging-files'); } });
   window.addEventListener('drop', async (e) => {
-    if (!editMode || !API_OK) return;
-    const files = [...(e.dataTransfer?.files || [])];
-    if (!files.length) return;
+    if (!editMode || !canEdit()) return;
+    const files = [...(e.dataTransfer?.files || [])]; if (!files.length) return;
     e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging-files');
     await uploadFiles(files);
   });
+  function normalizeName(name) {
+    let base = name.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9 _-]+/g, '').trim().replace(/\s+/g, '-');
+    const ext = /\.(mp4|m4v|webm)$/i.test(name) ? name.match(/\.[^.]+$/)[0] : '.jpeg';
+    return base + ext;
+  }
+  function integrateImage(path) {
+    const file = path.split('/').pop(); const slug = slugify(baseOf(file));
+    let proj = findProject(slug);
+    if (proj) { if (!proj.photos.includes(path)) { proj.photos.push(path); proj.photos.sort((a, b) => suffixOf(a.split('/').pop()) - suffixOf(b.split('/').pop())); } }
+    else { proj = { id: slug, title: titleFromBase(baseOf(file)), desc: '', color: null, section: 'physical', photos: [path] }; MANIFEST.physical.push(proj); ensureOrder(slug, 'physical'); }
+    return proj;
+  }
   async function uploadFiles(fileList) {
     const files = [...fileList].filter(f => /\.(jpe?g|png|webp|mov|mp4|m4v)$/i.test(f.name));
     if (!files.length) { flashMsg('No image files in that drop.'); return; }
-    flashMsg('Adding ' + files.length + ' file(s)…');
-    for (const f of files) {
+    if (API_OK) {
+      flashMsg('Adding ' + files.length + ' file(s)…');
+      for (const f of files) { try { await fetch('/api/upload/' + encodeURIComponent(f.name), { method: 'PUT', body: await f.arrayBuffer() }); } catch (e) { flashMsg('Upload failed: ' + e.message); } }
+      await loadData(); render(); flashMsg(files.length + ' added — click ✎ Edit to name & describe.');
+    } else if (GH.connected()) {
       try {
-        const buf = await f.arrayBuffer();
-        await fetch('/api/upload/' + encodeURIComponent(f.name), { method: 'PUT', body: buf });
-      } catch (e) { flashMsg('Upload failed: ' + e.message); }
-    }
-    await loadData(); render();
-    flashMsg(files.length + ' file(s) added — click ✎ Edit on the new card(s) to name & describe them.');
+        flashMsg('Optimizing & committing ' + files.length + ' image(s)…');
+        const extra = [];
+        for (const f of files) {
+          const isVid = /\.(mp4|m4v|webm)$/i.test(f.name);
+          if (isVid) { flashMsg('Videos must be added via the local studio (node studio.mjs).'); continue; }
+          const blob = await optimizeImage(f);
+          const name = normalizeName(f.name); const path = 'img/' + name;
+          previewUrls[path] = URL.createObjectURL(blob);   // show instantly, pre-rebuild
+          integrateImage(path);
+          extra.push({ path, blobBase64: await blobToBase64(blob) });
+        }
+        if (extra.length) await persist('Add ' + extra.length + ' image(s)', extra);
+      } catch (e) { flashMsg('Add failed: ' + e.message); }
+    } else { flashMsg('Connect GitHub (top bar) to add images to the live site.'); }
   }
 
   // ====== Login / edit mode ======
@@ -502,53 +495,52 @@
   document.getElementById('login-submit').addEventListener('click', tryLogin);
   async function sha256hex(str) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
   async function tryLogin() {
-    loginError.hidden = true;
-    let hash; try { hash = await sha256hex(loginPass.value); } catch (e) { loginError.textContent = 'Login needs https or localhost'; loginError.hidden = false; return; }
-    if (hash === PASS_HASH) { loginPass.value = ''; loginForm.hidden = true; enterEditMode(); }
-    else { loginError.textContent = 'Incorrect password'; loginError.hidden = false; }
+    loginError.hidden = true; let hash;
+    try { hash = await sha256hex(loginPass.value); } catch (e) { loginError.textContent = 'Login needs https or localhost'; loginError.hidden = false; return; }
+    if (hash === PASS_HASH) { loginPass.value = ''; loginForm.hidden = true; enterEditMode(); } else { loginError.textContent = 'Incorrect password'; loginError.hidden = false; }
   }
-  function enterEditMode() {
-    editMode = true; document.body.classList.add('edit-mode'); editBar.hidden = false; loginBtn.hidden = true;
+  function chrome() {
+    const ghConn = GH.connected();
+    document.body.classList.toggle('gh-on', ghConn && !API_OK);
+    document.getElementById('gh-area').hidden = API_OK;
     document.getElementById('publish-btn').hidden = !API_OK;
-    document.getElementById('copy-order').hidden = API_OK;
-    document.getElementById('reset-order').hidden = API_OK;
+    document.getElementById('copy-order').hidden = API_OK || ghConn;
+    document.getElementById('reset-order').hidden = API_OK || ghConn;
+    document.getElementById('gh-connect').hidden = ghConn;
+    document.getElementById('gh-disconnect').hidden = !ghConn;
+    document.getElementById('gh-status').innerHTML = `<span class="gh-dot ${ghConn ? 'on' : ''}"></span>GitHub: ${ghConn ? 'connected' : 'not connected'}`;
     editMsg.textContent = API_OK
-      ? 'Editing — drag to reorder · ✎ to edit text · drop images anywhere to add.'
-      : 'Reorder preview (saved to this browser). Run `node studio.mjs` locally to edit text, add images & publish.';
-    render();
+      ? 'Editing locally — drag to reorder · ✎ to edit · drop images to add · then Publish.'
+      : (ghConn ? 'Editing the live site — changes commit to GitHub on save (live in ~1 min).'
+                : 'Connect GitHub to edit the live site (drag/✎/drop), or run node studio.mjs locally.');
   }
+  function enterEditMode() { editMode = true; document.body.classList.add('edit-mode'); editBar.hidden = false; loginBtn.hidden = true; chrome(); render(); }
   function exitEditMode() { editMode = false; document.body.classList.remove('edit-mode'); editBar.hidden = true; loginBtn.hidden = false; if (openEditorEl) { openEditorEl.remove(); openEditorEl = null; } render(); }
   document.getElementById('logout-btn').addEventListener('click', exitEditMode);
   document.getElementById('reset-order').addEventListener('click', () => { localStorage.removeItem(ORDER_KEY); loadData().then(render); flashMsg('Reset to default order.'); });
-  document.getElementById('copy-order').addEventListener('click', async () => {
-    const text = MANIFEST.physical.map((p, i) => `${i + 1}. ${p.title}`).join('\n');
-    try { await navigator.clipboard.writeText(text); flashMsg('Order copied.'); } catch (e) { window.prompt('Order:', MANIFEST.physical.map(p => p.title).join(' | ')); }
-  });
+  document.getElementById('copy-order').addEventListener('click', async () => { const t = MANIFEST.physical.map((p, i) => `${i + 1}. ${p.title}`).join('\n'); try { await navigator.clipboard.writeText(t); flashMsg('Order copied.'); } catch (e) { window.prompt('Order:', MANIFEST.physical.map(p => p.title).join(' | ')); } });
   document.getElementById('publish-btn').addEventListener('click', async () => {
     flashMsg('Publishing to GitHub…');
-    try {
-      const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Update portfolio content' }) });
-      const j = await r.json();
-      flashMsg(j.ok ? ('Published ✓ ' + (j.detail || '')) : ('Publish failed: ' + (j.error || 'unknown')));
-    } catch (e) { flashMsg('Publish failed: ' + e.message); }
+    try { const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Update portfolio content' }) }); const j = await r.json(); flashMsg(j.ok ? ('Published ✓ ' + (j.detail || '')) : ('Publish failed: ' + (j.error || ''))); } catch (e) { flashMsg('Publish failed: ' + e.message); }
   });
+
+  // GitHub connect controls
+  document.getElementById('gh-connect').addEventListener('click', () => { const f = document.getElementById('gh-form'); f.hidden = !f.hidden; if (!f.hidden) document.getElementById('gh-token').focus(); });
+  document.getElementById('gh-disconnect').addEventListener('click', () => { localStorage.removeItem('gh.token'); chrome(); render(); flashMsg('GitHub disconnected.'); });
+  document.getElementById('gh-token').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('gh-token-save').click(); });
+  document.getElementById('gh-token-save').addEventListener('click', async () => {
+    const tok = document.getElementById('gh-token').value.trim(); if (!tok) return;
+    localStorage.setItem('gh.token', tok);
+    flashMsg('Checking token…');
+    try { await GH.api(`/repos/${GH.owner}/${GH.repo}`); document.getElementById('gh-token').value = ''; document.getElementById('gh-form').hidden = true; chrome(); render(); flashMsg('GitHub connected ✓ — you can now edit the live site.'); }
+    catch (e) { localStorage.removeItem('gh.token'); chrome(); flashMsg('Token rejected: ' + e.message); }
+  });
+
   let flashTimer;
-  function flashMsg(msg) {
-    const base = editMsg.dataset.base || (editMsg.dataset.base = '');
-    editMsg.textContent = msg; clearTimeout(flashTimer);
-    flashTimer = setTimeout(() => {
-      editMsg.textContent = API_OK
-        ? 'Editing — drag to reorder · ✎ to edit text · drop images anywhere to add.'
-        : 'Reorder preview (saved to this browser). Run `node studio.mjs` locally to edit, add & publish.';
-    }, 3500);
-  }
+  function flashMsg(msg) { editMsg.textContent = msg; clearTimeout(flashTimer); flashTimer = setTimeout(chrome, 4000); }
 
   // ====== Init ======
-  (async () => {
-    await loadData();
-    render();
-    document.getElementById('year').textContent = new Date().getFullYear();
-  })();
+  (async () => { await loadData(); render(); document.getElementById('year').textContent = new Date().getFullYear(); })();
 </script>
 
 </body>
