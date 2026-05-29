@@ -49,6 +49,11 @@
       "title": "Habit Tracker",
       "desc": "Walnut, brass + epoxy inlays, and glass shelf.",
       "section": "physical"
+    },
+    "walnut-maple-tongs": {
+      "title": "Walnut Maple Tongs",
+      "desc": "Walnut + Maple",
+      "section": "physical"
     }
   },
   "order": {
@@ -57,7 +62,6 @@
       "walnut-fireplace-mantle",
       "slate-coasters",
       "cork-engraved-coasters",
-      "walnut-maple-tongs",
       "airbnb-sign",
       "cat-sign",
       "paper-towel-roll-holder",
@@ -70,7 +74,8 @@
       "anamorphic-crystal-engraving",
       "walnut-maple-lamp",
       "steel-paper-towel-roll-holder",
-      "habit-tracker"
+      "habit-tracker",
+      "walnut-maple-tongs"
     ],
     "digital": []
   }
