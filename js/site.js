@@ -118,7 +118,7 @@
 
   // ---------- Hero stats ----------
   function renderStats() {
-    const n = MANIFEST.physical.length;
+    const n = MANIFEST.physical.length + MANIFEST.digital.length;
     const elBuilds = document.getElementById('stat-builds');
     const elMat = document.getElementById('stat-materials');
     if (elBuilds) elBuilds.textContent = n;
@@ -174,7 +174,20 @@
     frame.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     if (p.desc) {
       const btn = card.querySelector('.readmore'), panel = card.querySelector('.desc-panel');
-      btn.addEventListener('click', () => { const isOpen = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!isOpen)); panel.style.maxHeight = isOpen ? '0px' : panel.scrollHeight + 'px'; btn.textContent = isOpen ? 'Read more' : 'Close'; });
+      let pinned = false;
+      const expand = () => { panel.style.maxHeight = panel.scrollHeight + 'px'; };
+      const collapse = () => { panel.style.maxHeight = '0px'; };
+      // pops open on hover (as the image enlarges); collapses on leave — unless pinned
+      card.addEventListener('mouseenter', () => { if (!pinned) expand(); });
+      card.addEventListener('mouseleave', () => { if (!pinned) collapse(); });
+      // clicking "Read more" pins it open until clicked again ("Close")
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pinned = !pinned;
+        panel.style.maxHeight = pinned ? panel.scrollHeight + 'px' : '0px';
+        btn.setAttribute('aria-expanded', String(pinned));
+        btn.textContent = pinned ? 'Close' : 'Read more';
+      });
     }
     card.querySelector('.editbtn').addEventListener('click', (e) => { e.stopPropagation(); openEditor(card, p, section); });
     if (editMode) makeDraggable(card);
@@ -252,7 +265,13 @@
   document.getElementById('lb-close').addEventListener('click', closeLightbox);
   document.getElementById('lb-prev').addEventListener('click', () => lbShow(lbPos - 1));
   document.getElementById('lb-next').addEventListener('click', () => lbShow(lbPos + 1));
-  lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-stage') || e.target.classList.contains('lb-media-wrap')) closeLightbox(); });
+  // close on any click that isn't the image/clip or a nav/close control
+  lb.addEventListener('click', (e) => {
+    const t = e.target;
+    const onMedia = t.tagName === 'IMG' || t.tagName === 'VIDEO';
+    const onControl = t.closest('.lb-btn') || t.closest('.lb-close');
+    if (!onMedia && !onControl) closeLightbox();
+  });
   document.addEventListener('keydown', (e) => {
     if (!lb.classList.contains('open')) return;
     if (e.key === 'Escape') closeLightbox();

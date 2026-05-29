@@ -126,7 +126,7 @@ body > * { position: relative; z-index: 1; }
    =================================================================== */
 .hero {
   max-width: var(--maxw); margin: 0 auto;
-  padding: clamp(3.5rem, 8vw, 6.5rem) 2rem clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.75rem, 4vw, 3.25rem) 2rem clamp(2rem, 4vw, 3rem);
 }
 .hero-inner { display: flex; flex-direction: column; gap: 1.4rem; }
 
@@ -506,7 +506,7 @@ html[data-bg="auto"] { --grain-opacity: 0.05; --rules-opacity: 0.018; }
   .commission-inner { grid-template-columns: 1fr; gap: 1.6rem; }
 }
 @media (max-width: 600px) {
-  .hero { padding: 2.75rem 1.25rem 1.5rem; }
+  .hero { padding: 1.375rem 1.25rem 1.5rem; }
   main { padding: 1.25rem 1.25rem 3.5rem; }
   .commission, footer { padding-left: 1.25rem; padding-right: 1.25rem; }
   .grid { gap: 2.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
