@@ -39,13 +39,17 @@
       "title": "Walnut Maple Lamp",
       "desc": "Walnut and Maple, hollow octagonal pole with internal wiring.",
       "section": "physical"
+    },
+    "steel-paper-towel-roll-holder": {
+      "title": "Steel Paper Towel Roll Holder",
+      "desc": "9lb solid welded steel.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
       "walnut-fireplace-mantle",
-      "steel-paper-towel-roll-holder",
       "habit-tracker",
       "slate-coasters",
       "cork-engraved-coasters",
@@ -60,7 +64,8 @@
       "rotating-poster-frame",
       "curvy-shelf",
       "anamorphic-crystal-engraving",
-      "walnut-maple-lamp"
+      "walnut-maple-lamp",
+      "steel-paper-towel-roll-holder"
     ],
     "digital": []
   }
