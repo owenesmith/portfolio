@@ -37,7 +37,7 @@
     },
     "walnut-maple-lamp": {
       "title": "Walnut Maple Lamp",
-      "desc": "Walnut and Maple, hollow octagonal pole with internal wiring.",
+      "desc": "Walnut and Maple, hollow octagonal pole with internal wiring and brass topper.",
       "section": "physical"
     },
     "steel-paper-towel-roll-holder": {
@@ -70,12 +70,12 @@
       "balance-scale",
       "curvy-shelf",
       "anamorphic-crystal-engraving",
-      "walnut-maple-lamp",
       "habit-tracker",
       "walnut-maple-tongs",
       "charleston-union-pier-map",
       "rotating-poster-frame",
-      "steel-paper-towel-roll-holder"
+      "steel-paper-towel-roll-holder",
+      "walnut-maple-lamp"
     ],
     "digital": []
   }
