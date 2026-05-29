@@ -14,11 +14,15 @@
       "title": "Charleston Union Pier Map",
       "desc": "Maple + Walnut, Epoxy fill street map and brass Union Pier inlay.",
       "section": "physical"
+    },
+    "balance-scale": {
+      "title": "Balance Scale",
+      "desc": "Maple, Walnut, Oak, with Intentionality tokens.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
-      "balance-scale",
       "tree-bookshelf",
       "rotating-poster-frame",
       "curvy-shelf",
@@ -35,7 +39,8 @@
       "paper-towel-roll-holder",
       "kumiko-style-lamp",
       "cutting-board",
-      "charleston-union-pier-map"
+      "charleston-union-pier-map",
+      "balance-scale"
     ],
     "digital": []
   }
