@@ -19,12 +19,16 @@
       "title": "Balance Scale",
       "desc": "Maple, Walnut, Oak, with Intentionality tokens.",
       "section": "physical"
+    },
+    "rotating-poster-frame": {
+      "title": "Rotating Poster Frame",
+      "desc": "Battery operated frame containing 10 posters on a motorized scroll with backlighting, controllable by bluetooth app.",
+      "section": "physical"
     }
   },
   "order": {
     "physical": [
       "tree-bookshelf",
-      "rotating-poster-frame",
       "curvy-shelf",
       "anamorphic-crystal-engraving",
       "walnut-fireplace-mantle",
@@ -40,7 +44,8 @@
       "kumiko-style-lamp",
       "cutting-board",
       "charleston-union-pier-map",
-      "balance-scale"
+      "balance-scale",
+      "rotating-poster-frame"
     ],
     "digital": []
   }
