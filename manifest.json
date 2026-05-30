@@ -240,16 +240,6 @@
       "photos": [
         "img/Pierscope3.jpeg"
       ]
-    },
-    {
-      "id": "pierscope2",
-      "title": "Pierscope2",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Pierscope2.jpeg"
-      ]
     }
   ],
   "digital": []
