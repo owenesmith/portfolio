@@ -54,6 +54,11 @@
       "title": "Walnut Maple Tongs",
       "desc": "Walnut + Maple",
       "section": "physical"
+    },
+    "jerry": {
+      "title": "Jerry",
+      "desc": "Jerry",
+      "section": "physical"
     }
   },
   "order": {
