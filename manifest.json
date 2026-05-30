@@ -191,6 +191,16 @@
       "photos": [
         "img/Paper-Towel-Roll-Holder.jpeg"
       ]
+    },
+    {
+      "id": "jerry",
+      "title": "Jerry",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Jerry.jpeg"
+      ]
     }
   ],
   "digital": []
