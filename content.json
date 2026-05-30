@@ -59,6 +59,10 @@
       "title": "Jerry",
       "desc": "This is Jerry.",
       "section": "physical"
+    },
+    "pierscope1": {
+      "title": "Pierscope1",
+      "section": "digital"
     }
   },
   "order": {
@@ -81,9 +85,10 @@
       "airbnb-sign",
       "cat-sign",
       "paper-towel-roll-holder",
-      "jerry",
-      "pierscope1"
+      "jerry"
     ],
-    "digital": []
+    "digital": [
+      "pierscope1"
+    ]
   }
 }
