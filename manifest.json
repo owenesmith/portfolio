@@ -220,16 +220,6 @@
       "photos": [
         "img/Jerry.jpeg"
       ]
-    },
-    {
-      "id": "pierscope3",
-      "title": "Pierscope3",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Pierscope3.jpeg"
-      ]
     }
   ],
   "digital": []
