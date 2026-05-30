@@ -229,12 +229,12 @@
       "desc": "",
       "color": null,
       "section": "digital",
+      "inProgress": true,
       "photos": [
         "img/Pierscope1.jpeg",
         "img/Pierscope1-2.jpeg",
         "img/Pierscope1-3.jpeg"
-      ],
-      "inProgress": true
+      ]
     }
   ]
 }
