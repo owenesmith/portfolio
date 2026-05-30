@@ -92,6 +92,16 @@
       ]
     },
     {
+      "id": "habit-tracker",
+      "title": "Habit Tracker",
+      "desc": "Walnut, brass + epoxy inlays, and glass shelf.",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Habit-Tracker.jpeg"
+      ]
+    },
+    {
       "id": "walnut-fireplace-mantle",
       "title": "Walnut Fireplace Mantle",
       "desc": "",
@@ -119,16 +129,6 @@
       "section": "physical",
       "photos": [
         "img/Steel-Paper-Towel-Roll-Holder.jpeg"
-      ]
-    },
-    {
-      "id": "habit-tracker",
-      "title": "Habit Tracker",
-      "desc": "Walnut, brass + epoxy inlays, and glass shelf.",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Habit-Tracker.jpeg"
       ]
     },
     {
