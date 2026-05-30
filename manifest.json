@@ -102,16 +102,6 @@
       ]
     },
     {
-      "id": "walnut-fireplace-mantle",
-      "title": "Walnut Fireplace Mantle",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Walnut-Fireplace-Mantle.jpeg"
-      ]
-    },
-    {
       "id": "walnut-maple-lamp",
       "title": "Walnut Maple Lamp",
       "desc": "Walnut and Maple, hollow octagonal pole with internal wiring and brass topper.",
@@ -129,6 +119,16 @@
       "section": "physical",
       "photos": [
         "img/Steel-Paper-Towel-Roll-Holder.jpeg"
+      ]
+    },
+    {
+      "id": "walnut-fireplace-mantle",
+      "title": "Walnut Fireplace Mantle",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Walnut-Fireplace-Mantle.jpeg"
       ]
     },
     {
