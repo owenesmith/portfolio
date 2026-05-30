@@ -12,9 +12,21 @@
   const isVideo = (src) => /\.(mp4|webm|ogg|m4v)$/i.test(src);
   const CYCLE_MS = 5200, STAGGER_MS = 240, SKIP_CYCLES = 2;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const PASS_HASH = "d65ee151f642081b0f161569f1981ec6309bbee92525ee85796a8f8a44fbd230";
+  const PASS_HASH = "02b035a06145202e2f913590c2c6b12899da968b042b6803430bace1f86c93da";
   const ORDER_KEY = "portfolio.order.v1";
   const ZOOM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>';
+  // tiny padlock for the browser mockup's address bar
+  const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  // plausible URLs shown in browser mockups (display-only); falls back to a slug host
+  const BROWSER_URLS = {
+    "pierscope-companion-viewer": "pierscope.app/viewer",
+    "portfolio2": "owenesmith.com",
+    "kumiko-generator": "owenesmith.com/kumiko",
+    "clarity1": "clarity.so",
+    "inkpress1": "inkpress.app",
+    "marble-track-generator": "owenesmith.com/marble",
+  };
+  const browserUrlFor = (p) => BROWSER_URLS[p.id] || ("owenesmith.com/" + String(p.id || "").replace(/[^a-z0-9]+/gi, "-"));
   // curated, honest materials list drawn from the work itself
   const MATERIALS = ["Walnut", "Maple", "Purpleheart", "Padauk", "Oak", "Steel", "Slate", "Cork", "Glass", "Veneer", "Brass"];
 
@@ -133,6 +145,32 @@
   function stopConductor() { if (conductorTimer) { clearInterval(conductorTimer); conductorTimer = null; } }
   document.addEventListener('visibilitychange', () => { document.hidden ? stopConductor() : startConductor(); });
 
+  // ---------- Device mockups (phone / browser) ----------
+  // Wraps the media in a phone bezel or browser window. The screenshot inside
+  // is centered and contain-scaled (largest fit, never cropped).
+  function mockupWrap(p, inner) {
+    if (p.frame === 'phone') {
+      return `<div class="mockup mockup--phone">`
+        + `<span class="mp-btn mp-vol-up"></span><span class="mp-btn mp-vol-dn"></span><span class="mp-btn mp-power"></span>`
+        + `<div class="mockup-screen"><span class="mp-island"></span>${inner}</div>`
+        + `</div>`;
+    }
+    if (p.frame === 'browser') {
+      return `<div class="mockup mockup--browser">`
+        + `<div class="mockup-bar">`
+        + `<span class="mb-dots"><span class="mb-dot"></span><span class="mb-dot"></span><span class="mb-dot"></span></span>`
+        + `<span class="mb-url">${LOCK_SVG}<span class="mb-url-text">${esc(browserUrlFor(p))}</span></span>`
+        + `</div>`
+        + `<div class="mockup-screen">${inner}</div>`
+        + `</div>`;
+    }
+    if (p.frame === 'phone-image') {
+      // the screenshot already includes its own device mockup — show it bare (no CSS frame)
+      return `<div class="mockup mockup--device">${inner}</div>`;
+    }
+    return inner;
+  }
+
   // ---------- Build a card ----------
   function buildCard(p, i, section, isNew) {
     const card = document.createElement('article');
@@ -152,7 +190,7 @@
     const wip = p.inProgress ? `<span class="wip-tag">In&nbsp;Progress</span>` : '';
     const descBlock = p.desc ? `<div class="desc-wrap"><button class="readmore" type="button" aria-expanded="false">Read more</button><div class="desc-panel"><p class="desc">${esc(p.desc)}</p></div></div>` : '';
     card.innerHTML = `
-      <div class="frame" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${isNew ? '<span class="newbadge">New</span>' : ''}${wip}${media}${cue}${arrows}${dots}</div>
+      <div class="frame frame--${p.frame || 'none'}" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${isNew ? '<span class="newbadge">New</span>' : ''}${wip}${mockupWrap(p, media)}${cue}${arrows}${dots}</div>
       <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">${esc(p.title)}</h2><button class="editbtn" type="button">✎ Edit</button></div>
       ${descBlock}`;
 
@@ -201,9 +239,16 @@
     const known = knownIds();
     gridP.innerHTML = '';
     MANIFEST.physical.forEach((p, i) => gridP.appendChild(buildCard(p, i, 'physical', editMode && canEdit() && !known.has(p.id))));
+    const phonesEl = document.getElementById('digital-phones');
+    if (phonesEl) phonesEl.innerHTML = '';
     if (MANIFEST.digital && MANIFEST.digital.length) {
       gridD.innerHTML = '';
-      MANIFEST.digital.forEach((p, i) => gridD.appendChild(buildCard(p, i, 'digital', editMode && canEdit() && !known.has(p.id))));
+      // phones lead as the hero row; everything else (browser frames) fills the grid below
+      MANIFEST.digital.forEach((p, i) => {
+        const card = buildCard(p, i, 'digital', editMode && canEdit() && !known.has(p.id));
+        const inHero = (p.frame === 'phone' || p.frame === 'phone-image') && phonesEl;
+        (inHero ? phonesEl : gridD).appendChild(card);
+      });
     } else {
       gridD.innerHTML = editMode
         ? '<p class="empty-hint">No digital work yet — add an image (or “+ New work”), then ✎ Edit it and set its Section to “Digital”.</p>'
@@ -227,7 +272,7 @@
   let lbPhotos = [], lbPos = 0, lbReturnFocus = null;
 
   function lbShow(n) {
-    const nodes = lbMedia.children;
+    const nodes = lbMedia.querySelectorAll('img, video');
     if (!nodes.length) return;
     nodes[lbPos] && nodes[lbPos].classList.remove('active');
     lbPos = (n + lbPhotos.length) % lbPhotos.length;
@@ -240,12 +285,13 @@
   }
   function openLightbox(p, startPos) {
     lbPhotos = p.photos.slice();
-    lbMedia.innerHTML = lbPhotos.map((src) => {
+    const lbmedia = lbPhotos.map((src) => {
       const shown = previewUrls[src] || src;
       return isVideo(src)
         ? `<video src="${esc(shown)}" muted loop playsinline controls></video>`
         : `<img src="${esc(shown)}" alt="${esc(p.title)}">`;
     }).join('');
+    lbMedia.innerHTML = mockupWrap(p, lbmedia);
     lbDots.innerHTML = lbPhotos.length > 1 ? lbPhotos.map(() => '<span class="dot"></span>').join('') : '';
     lbTitle.textContent = p.title;
     const idx = MANIFEST.physical.findIndex(x => x.id === p.id);
@@ -320,6 +366,8 @@
       <textarea class="ed-desc" placeholder="Description (optional)">${esc(p.desc)}</textarea>
       <div class="ed-row"><label>Section</label>
         <select class="ed-section"><option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option><option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option></select>
+        <label>Frame</label>
+        <select class="ed-frame"><option value="none"${(!p.frame || p.frame === 'none') ? ' selected' : ''}>No frame</option><option value="phone"${p.frame === 'phone' ? ' selected' : ''}>Phone</option><option value="phone-image"${p.frame === 'phone-image' ? ' selected' : ''}>Phone (pre-rendered image)</option><option value="browser"${p.frame === 'browser' ? ' selected' : ''}>Browser window</option></select>
         <label class="ed-wip"><input type="checkbox" class="ed-inprogress"${p.inProgress ? ' checked' : ''}> In&nbsp;Progress</label>
         <button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button><button class="ed-hide" type="button">Hide</button>
       </div>
@@ -332,10 +380,11 @@
     ed.querySelector('.ed-save').addEventListener('click', async () => {
       const title = ed.querySelector('.ed-title').value.trim(), desc = ed.querySelector('.ed-desc').value.trim(), newSection = ed.querySelector('.ed-section').value;
       const wip = ed.querySelector('.ed-inprogress').checked;
+      const frame = ed.querySelector('.ed-frame').value;
       CONTENT.items = CONTENT.items || {};
-      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined, inProgress: wip || undefined };
+      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined, inProgress: wip || undefined, frame: (frame !== 'none') ? frame : undefined };
       ensureOrder(p.id, newSection);
-      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; proj.inProgress = wip; }
+      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; proj.inProgress = wip; proj.frame = frame; }
       openEditorEl = null;
       await persist('Edit “' + (title || p.title) + '”');
     });
@@ -391,39 +440,71 @@
   function draggedSection() { for (const s of ['physical', 'digital']) if (MANIFEST[s].some(p => p.id === dragId)) return s; return 'physical'; }
 
   // ---------- Add images (drop anywhere) ----------
-  let dragDepth = 0;
-  const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
-  window.addEventListener('dragover', (e) => { if (editMode && canEdit() && hasFiles(e)) e.preventDefault(); });
-  window.addEventListener('dragenter', (e) => { if (editMode && canEdit() && hasFiles(e)) { dragDepth++; document.body.classList.add('dragging-files'); } });
-  window.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging-files'); } });
+  const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes('Files');
+  const dropOverlay = document.getElementById('drop-overlay');
+  const zones = dropOverlay ? [...dropOverlay.querySelectorAll('.drop-zone')] : [];
+  const armed = (e) => editMode && canEdit() && hasFiles(e);
+  const showOverlay = () => { if (dropOverlay) dropOverlay.hidden = false; };
+  const hideOverlay = () => { if (dropOverlay) { dropOverlay.hidden = true; zones.forEach(z => z.classList.remove('over')); } };
+  const sectionForY = (y) => (y < window.innerHeight / 2) ? 'physical' : 'digital';
+
+  // Window: reveal the overlay when a file-drag enters; keep drops allowed; clean up on exit.
+  window.addEventListener('dragenter', (e) => { if (armed(e)) showOverlay(); });
+  window.addEventListener('dragover', (e) => { if (armed(e)) e.preventDefault(); });
+  window.addEventListener('dragend', hideOverlay);
+  window.addEventListener('dragleave', (e) => { if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) hideOverlay(); });
+  // Fallback (drop that lands before a zone catches it) — route by cursor height.
   window.addEventListener('drop', async (e) => {
-    if (!editMode || !canEdit()) return;
-    const files = [...(e.dataTransfer?.files || [])]; if (!files.length) return;
-    e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging-files');
-    await uploadFiles(files);
+    e.preventDefault(); hideOverlay();
+    if (!(editMode && canEdit())) return;
+    const files = [...(e.dataTransfer?.files || [])];
+    if (files.length) await uploadFiles(files, sectionForY(e.clientY));
+  });
+
+  // The two halves are real drop targets (top = Physical, bottom = Digital).
+  zones.forEach((zone) => {
+    zone.addEventListener('dragover', (e) => { if (!armed(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; zones.forEach(z => z.classList.toggle('over', z === zone)); });
+    zone.addEventListener('dragenter', (e) => { if (armed(e)) { e.preventDefault(); zones.forEach(z => z.classList.toggle('over', z === zone)); } });
+    zone.addEventListener('drop', async (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const files = [...(e.dataTransfer?.files || [])];
+      hideOverlay();
+      if (editMode && canEdit() && files.length) await uploadFiles(files, zone.dataset.section);
+    });
   });
   function normalizeName(name) {
     let base = name.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9 _-]+/g, '').trim().replace(/\s+/g, '-');
     const ext = /\.(mp4|m4v|webm)$/i.test(name) ? name.match(/\.[^.]+$/)[0] : '.jpeg';
     return base + ext;
   }
-  function integrateImage(path) {
+  function integrateImage(path, section = 'physical') {
     const file = path.split('/').pop(); const slug = slugify(baseOf(file));
     let proj = findProject(slug);
     if (proj) { if (!proj.photos.includes(path)) { proj.photos.push(path); proj.photos.sort((a, b) => suffixOf(a.split('/').pop()) - suffixOf(b.split('/').pop())); } }
-    else { proj = { id: slug, title: titleFromBase(baseOf(file)), desc: '', color: null, section: 'physical', photos: [path] }; MANIFEST.physical.push(proj); ensureOrder(slug, 'physical'); }
+    else {
+      proj = { id: slug, title: titleFromBase(baseOf(file)), desc: '', color: null, section, inProgress: false, photos: [path] };
+      MANIFEST[section].push(proj);
+      if (section !== 'physical') { CONTENT.items = CONTENT.items || {}; CONTENT.items[slug] = { ...(CONTENT.items[slug] || {}), section }; }
+      ensureOrder(slug, section);
+    }
     return proj;
   }
-  async function uploadFiles(fileList) {
+  async function uploadFiles(fileList, section = 'physical') {
     const files = [...fileList].filter(f => /\.(jpe?g|png|webp|mov|mp4|m4v)$/i.test(f.name));
     if (!files.length) { flashMsg('No image files in that drop.'); return; }
+    const where = section === 'digital' ? 'Digital' : 'Physical';
     if (API_OK) {
-      flashMsg('Adding ' + files.length + ' file(s)…');
+      flashMsg('Adding ' + files.length + ' to ' + where + '…');
       for (const f of files) { try { await fetch('/api/upload/' + encodeURIComponent(f.name), { method: 'PUT', body: await f.arrayBuffer() }); } catch (e) { flashMsg('Upload failed: ' + e.message); } }
-      await loadData(); render(); flashMsg(files.length + ' added — click ✎ Edit to name & describe.');
+      if (section !== 'physical') {
+        CONTENT.items = CONTENT.items || {};
+        for (const f of files) { const slug = slugify(baseOf(f.name)); CONTENT.items[slug] = { ...(CONTENT.items[slug] || {}), section }; ensureOrder(slug, section); }
+        try { await fetch('/api/content', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(CONTENT) }); } catch (e) {}
+      }
+      await loadData(); render(); flashMsg(files.length + ' added to ' + where + ' — click ✎ Edit to name & describe.');
     } else if (GH.connected()) {
       try {
-        flashMsg('Optimizing & committing ' + files.length + ' image(s)…');
+        flashMsg('Optimizing & committing ' + files.length + ' image(s) to ' + where + '…');
         const extra = [];
         for (const f of files) {
           const isVid = /\.(mp4|m4v|webm)$/i.test(f.name);
@@ -431,10 +512,10 @@
           const blob = await optimizeImage(f);
           const name = normalizeName(f.name); const path = 'img/' + name;
           previewUrls[path] = URL.createObjectURL(blob);
-          integrateImage(path);
+          integrateImage(path, section);
           extra.push({ path, blobBase64: await blobToBase64(blob) });
         }
-        if (extra.length) await persist('Add ' + extra.length + ' image(s)', extra);
+        if (extra.length) await persist('Add ' + extra.length + ' image(s) to ' + where, extra);
       } catch (e) { flashMsg('Add failed: ' + e.message); }
     } else { flashMsg('Connect GitHub (top bar) to add images to the live site.'); }
   }

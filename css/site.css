@@ -35,6 +35,9 @@
   --rules-opacity: 0;
   --shadow-card: 0 1px 2px rgba(33, 27, 20, 0.04);
   --shadow-lift: 0 24px 48px -20px rgba(33, 27, 20, 0.32), 0 6px 14px -8px rgba(33, 27, 20, 0.18);
+  /* soft, diffuse shadow that floats the device mockups off the page */
+  --device-shadow: 0 22px 44px -22px rgba(33, 27, 20, 0.50), 0 8px 18px -14px rgba(33, 27, 20, 0.30);
+  --device-shadow-lift: 0 36px 66px -26px rgba(33, 27, 20, 0.55), 0 12px 26px -16px rgba(33, 27, 20, 0.36);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -82,10 +85,10 @@ body::after {
 /* rules visibility: blended through a CSS var by re-declaring the layer with alpha */
 body::after {
   background:
-    radial-gradient(120% 80% at 50% -8%, var(--bg-2) 0%, transparent 55%),
+    radial-gradient(120% 75% at 50% -10%, var(--bg-2) 0%, transparent 42%),
     repeating-linear-gradient(to bottom,
-      transparent 0, transparent 47px,
-      rgba(33, 27, 20, var(--rules-opacity)) 47px, rgba(33, 27, 20, var(--rules-opacity)) 48px);
+      transparent 0, transparent 46px,
+      rgba(33, 27, 20, var(--rules-opacity)) 46px, rgba(33, 27, 20, var(--rules-opacity)) 48px);
 }
 
 body > * { position: relative; z-index: 1; }
@@ -176,6 +179,35 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 .section { scroll-margin-top: 1.25rem; }
 #digital { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--rule); }
 
+/* Digital layout: two equal-height phones centered up top, then a full-width 2-column
+   grid of browser mockups beneath (spanning the same width as the Physical grid).
+   --phone-w is the single source of phone size, so the CSS phone and the pre-rendered
+   phone image stay the same height at every breakpoint. */
+.digital-stage {
+  --phone-w: clamp(220px, 30vw, 300px);
+  --phone-h: calc(var(--phone-w) * 19.5 / 9);
+}
+.digital-phones {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+  gap: clamp(1.75rem, 5vw, 4rem);
+}
+.digital-phones .card { width: var(--phone-w); flex: 0 0 auto; }
+/* a pre-mockup'd device image sizes itself (width follows its height-match to the phone) */
+.digital-phones .card:has(.frame--phone-image) { width: auto; }
+.digital-phones .meta { justify-content: center; margin-top: 1.15rem; }
+.digital-phones .desc-wrap { text-align: center; }
+.digital-browsers {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2rem, 4vw, 3.2rem);
+  margin-top: clamp(3rem, 6vw, 5.5rem);
+}
+/* digital is a showcase, not the numbered catalogue — drop the index, left-align captions */
+#digital .index-num { display: none; }
+#digital .desc-wrap { margin-left: 0; }
+@media (max-width: 640px) {
+  .digital-browsers { grid-template-columns: 1fr; }
+}
+
 .toggle { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 2.5rem; }
 .toggle a {
   font-family: var(--font-display); font-size: clamp(1.5rem, 3.2vw, 2.1rem);
@@ -214,6 +246,119 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
   -webkit-user-drag: none; user-select: none;
 }
 .frame img.active, .frame video.active { opacity: 1; }
+
+/* ===== Device mockups (phone / browser) — built by mockupWrap(), reused in the lightbox ===== */
+.mockup-screen { position: relative; overflow: hidden; }
+.mockup-screen .media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; background: var(--screen-bg, #0c0c0e); }
+
+/* a framed card sheds the standard card chrome — the device itself is the frame */
+.frame--phone, .frame--browser, .frame--phone-image {
+  background: transparent; border: none; box-shadow: none;
+  overflow: visible; aspect-ratio: auto; cursor: pointer;
+}
+.frame--phone .mockup, .frame--browser .mockup {
+  position: relative; inset: auto; width: 100%; display: block;
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+/* lift the device (with a deeper shadow) on hover instead of lifting a card */
+.card:hover .frame--phone, .card:hover .frame--browser, .card:hover .frame--phone-image { transform: none; box-shadow: none; }
+.card:hover .frame--phone .mockup--phone,
+.card:hover .frame--browser .mockup--browser { transform: translateY(-8px); box-shadow: var(--device-shadow-lift); }
+
+/* ---- pre-rendered phone image (OrbitFrame): the screenshot already has a device mockup,
+   so show it bare and match its height to the CSS phone. drop-shadow (not box-shadow) so a
+   transparent crop floats by its real silhouette; a solid-bg image just casts a soft panel. */
+.frame--phone-image { width: max-content; max-width: 100%; margin-inline: auto; }
+.frame--phone-image .mockup--device {
+  position: relative; height: var(--phone-h); aspect-ratio: 313 / 609; /* OrbitFrame render ratio */
+  max-width: 100%;
+  transition: transform 0.5s var(--ease);
+}
+.frame--phone-image .mockup--device .media {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; background: transparent;
+  opacity: 0; transition: opacity 0.5s var(--ease);
+  filter: drop-shadow(0 20px 38px rgba(33, 27, 20, 0.42));
+}
+.frame--phone-image .mockup--device .media.active { opacity: 1; }
+.card:hover .frame--phone-image .mockup--device { transform: translateY(-8px); }
+.card:hover .frame--phone-image .mockup--device .media.active { filter: drop-shadow(0 30px 52px rgba(33, 27, 20, 0.50)); }
+
+/* ---- phone ---- */
+.mockup--phone {
+  position: relative;
+  aspect-ratio: 9 / 19.5;
+  background: linear-gradient(150deg, #34343a 0%, #1b1b20 55%, #26262c 100%);
+  border-radius: 13% / 6%;          /* large, near-continuous (squircle-ish) corners */
+  padding: 3.4%;                    /* slim, uniform bezel on every side */
+  box-shadow: var(--device-shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.mockup--phone .mockup-screen {
+  width: 100%; height: 100%;
+  border-radius: 10% / 4.7%;        /* inner screen radius tracks the bezel */
+  background: #0c0c0e;
+}
+.frame--phone .mockup--phone .mockup-screen .media { object-fit: cover; object-position: center; background: #0c0c0e; }
+/* dynamic island */
+.mp-island {
+  position: absolute; top: 2.8%; left: 50%; transform: translateX(-50%);
+  width: 28%; height: 3%; min-height: 9px;
+  background: #050506; border-radius: 100px; z-index: 4;
+}
+.mp-island::after {
+  content: ""; position: absolute; right: 13%; top: 50%; transform: translateY(-50%);
+  height: 58%; aspect-ratio: 1; max-width: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #243247, #050506 70%);
+}
+/* subtle side buttons: volume on the left, power on the right */
+.mp-btn { position: absolute; z-index: 1; }
+.mp-power  { right: -1.5px; top: 31%;   width: 2.2%; min-width: 2px; height: 12%;  background: linear-gradient(90deg, #14141a, #3a3a42); border-radius: 0 3px 3px 0; }
+.mp-vol-up { left: -1.5px;  top: 23%;   width: 2.2%; min-width: 2px; height: 7.5%; background: linear-gradient(90deg, #3a3a42, #14141a); border-radius: 3px 0 0 3px; }
+.mp-vol-dn { left: -1.5px;  top: 32.5%; width: 2.2%; min-width: 2px; height: 12%;  background: linear-gradient(90deg, #3a3a42, #14141a); border-radius: 3px 0 0 3px; }
+
+/* ---- browser ---- */
+/* the toolbar and the screen each carry their own aspect-ratio so they have a real
+   height at any width — putting aspect-ratio on the flex column instead collapses the
+   screen to 0 in some engines. Device height = toolbar + screen, stacked. */
+.mockup--browser {
+  width: 100%;
+  display: flex; flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 11px; overflow: hidden;
+  box-shadow: var(--device-shadow);
+}
+.mockup--browser .mockup-bar {
+  flex: none; width: 100%; aspect-ratio: 1400 / 116; min-height: 18px;
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0 3.2%;
+  background: linear-gradient(var(--bg-2), var(--bg-card));
+  border-bottom: 1px solid var(--rule);
+}
+.mockup--browser .mb-dots { display: flex; align-items: center; gap: 0.3rem; height: 42%; flex: none; }
+.mockup--browser .mb-dot { height: 100%; aspect-ratio: 1; border-radius: 50%; flex: none; background: #c8b9a4; }
+.mockup--browser .mb-dots .mb-dot:nth-child(1) { background: #e0897c; }
+.mockup--browser .mb-dots .mb-dot:nth-child(2) { background: #e2b96b; }
+.mockup--browser .mb-dots .mb-dot:nth-child(3) { background: #8fbf86; }
+.mockup--browser .mb-url {
+  flex: 1; min-width: 0; max-width: 78%; height: 60%;
+  display: flex; align-items: center; gap: 0.32rem;
+  margin-left: 0.3rem; padding: 0 0.6rem;
+  background: var(--bg); border: 1px solid var(--rule); border-radius: 100px;
+  font-family: var(--font-mono); font-size: clamp(7px, 1.25vw, 11px);
+  color: var(--ink-faint);
+}
+.mockup--browser .mb-url svg { width: 0.75em; height: 0.75em; flex: none; opacity: 0.6; }
+.mockup--browser .mb-url-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mockup--browser .mockup-screen { flex: none; width: 100%; aspect-ratio: 1400 / 680; background: #fff; }
+.frame--browser .mockup--browser .mockup-screen .media { object-fit: cover; object-position: center top; background: #fff; }
+
+/* in the lightbox the device keeps the whole screenshot visible (contain, not cover) */
+.lb-media .mockup { position: relative; inset: auto; display: flex; align-items: center; justify-content: center; }
+.lb-media .mockup--phone { height: 92%; max-width: 92%; }
+.lb-media .mockup--browser { width: min(92%, 1080px); max-height: 90%; }
+.lb-media .mockup-screen img, .lb-media .mockup-screen video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; opacity: 0; border-radius: 0; box-shadow: none; }
+.lb-media .mockup-screen img.active, .lb-media .mockup-screen video.active { opacity: 1; position: absolute; }
 .card:hover .frame img.active, .card:hover .frame video.active { transform: scale(1.018); }
 
 /* corner zoom cue, revealed on hover */
@@ -447,7 +592,14 @@ body.edit-mode .nav, body.edit-mode .dots, body.edit-mode .view-cue { display: n
 .card.is-new .frame { outline: 2px solid var(--accent); }
 .newbadge { position: absolute; top: 8px; left: 8px; z-index: 5; background: var(--accent); color: #fff; font-family: var(--font-mono); font-size: 0.62rem; padding: 0.12rem 0.45rem; border-radius: 4px; letter-spacing: 0.04em; }
 body:not(.edit-mode) .newbadge { display: none; }
-body.dragging-files::after { content: 'Drop images to add'; position: fixed; inset: 0; z-index: 100; background: rgba(33,27,20,0.66); color: var(--bg-card); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-style: italic; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+/* Drag-to-add overlay: top half = Physical, bottom half = Digital */
+.drop-overlay { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; }
+.drop-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--bg-card); background: rgba(33, 27, 20, 0.74); transition: background 0.15s ease; }
+.drop-zone + .drop-zone { border-top: 2px dashed rgba(251, 248, 242, 0.45); }
+.drop-zone .dz-sub { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.65; }
+.drop-zone .dz-label { font-family: var(--font-display); font-style: italic; font-size: clamp(1.8rem, 5vw, 3.2rem); line-height: 1; }
+.drop-zone.over { background: rgba(138, 58, 31, 0.85); }
+.drop-zone.over .dz-sub { opacity: 0.9; }
 
 /* ===================================================================
    DIRECTION: EDITORIAL
@@ -498,8 +650,12 @@ html[data-direction="workshop"] {
   --grain-opacity: 0.07;
   --shadow-card: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-lift: 0 30px 60px -22px rgba(0,0,0,0.8), 0 8px 18px -10px rgba(0,0,0,0.6);
+  --device-shadow: 0 24px 48px -22px rgba(0,0,0,0.72), 0 10px 22px -14px rgba(0,0,0,0.55);
+  --device-shadow-lift: 0 38px 70px -26px rgba(0,0,0,0.8), 0 14px 30px -16px rgba(0,0,0,0.6);
 }
 html[data-direction="workshop"] body::before { mix-blend-mode: overlay; }
+/* the browser device reads against the dark ground with a warmer panel + border */
+html[data-direction="workshop"] .mockup--browser { background: var(--bg-2); border-color: var(--rule); }
 html[data-direction="workshop"] .frame { background: #0e0a07; border-color: var(--rule); }
 html[data-direction="workshop"] .frame img,
 html[data-direction="workshop"] .frame video { background: #0e0a07; }
@@ -517,9 +673,9 @@ html[data-bg="rules"] { --grain-opacity: 0; --rules-opacity: 0.05; }
 html[data-bg="flat"]  { --grain-opacity: 0; --rules-opacity: 0; }
 html[data-bg="flat"] body::after { background: radial-gradient(120% 80% at 50% -8%, var(--bg-2) 0%, transparent 55%); }
 /* "auto" (default / unset) keeps grain + faint wash from base */
-html[data-bg="auto"] { --grain-opacity: 0.05; --rules-opacity: 0.018; }
+html[data-bg="auto"] { --grain-opacity: 0.05; --rules-opacity: 0.01; }
 
-/* ===================================================================
+/* =====================s==============================================
    RESPONSIVE
    =================================================================== */
 @media (prefers-reduced-motion: reduce) {

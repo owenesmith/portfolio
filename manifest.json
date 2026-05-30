@@ -7,6 +7,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Kumiko-Style-Lamp-1.jpeg",
         "img/Kumiko-Style-Lamp-2.jpeg",
@@ -21,6 +22,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Cutting-Board-1.jpeg",
         "img/Cutting-Board-2.jpeg"
@@ -33,6 +35,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Charleston-Union-Pier-Map-1.jpeg",
         "img/Charleston-Union-Pier-Map-2.jpeg",
@@ -46,6 +49,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Balance-Scale-2.jpeg"
       ]
@@ -57,6 +61,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Tree-Bookshelf.jpeg"
       ]
@@ -68,6 +73,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Rotating-Poster-Frame-1.mp4",
         "img/Rotating-Poster-Frame-2.jpeg",
@@ -82,6 +88,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Curvy-Shelf-1.jpeg",
         "img/Curvy-Shelf-2.jpeg"
@@ -94,6 +101,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Anamorphic-Crystal-Engraving-1.jpeg",
         "img/Anamorphic-Crystal-Engraving-2.jpeg"
@@ -106,6 +114,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Habit-Tracker.jpeg"
       ]
@@ -117,6 +126,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Walnut-Maple-Lamp.jpeg"
       ]
@@ -128,6 +138,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Steel-Paper-Towel-Roll-Holder.jpeg"
       ]
@@ -139,6 +150,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Walnut-Fireplace-Mantle.jpeg"
       ]
@@ -150,6 +162,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Slate-Coasters.jpeg"
       ]
@@ -161,6 +174,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Cork-Engraved-Coasters.jpeg"
       ]
@@ -172,6 +186,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Walnut-Maple-Tongs-1.jpeg",
         "img/Walnut-Maple-Tongs-2.jpeg"
@@ -184,6 +199,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/AirBnB-Sign.jpeg"
       ]
@@ -195,6 +211,7 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Cat-Sign.jpeg"
       ]
@@ -206,8 +223,34 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Paper-Towel-Roll-Holder.jpeg"
+      ]
+    },
+    {
+      "id": "degas-box1",
+      "title": "Degas Box",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Degas-Box1.jpeg",
+        "img/Degas-Box1-2.jpeg"
+      ]
+    },
+    {
+      "id": "heart-box",
+      "title": "Heart Box",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Heart-Box.jpeg"
       ]
     },
     {
@@ -217,23 +260,175 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Jerry.jpeg"
+      ]
+    },
+    {
+      "id": "bent-shelf",
+      "title": "Bent Shelf",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Bent-Shelf.jpeg"
+      ]
+    },
+    {
+      "id": "cookbook-holder",
+      "title": "Cookbook Holder",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Cookbook-Holder.jpeg"
+      ]
+    },
+    {
+      "id": "wood-ring",
+      "title": "Wood Ring",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Wood-Ring.jpeg"
+      ]
+    },
+    {
+      "id": "boardgame",
+      "title": "Board Game",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Boardgame.jpeg"
+      ]
+    },
+    {
+      "id": "garden-sign",
+      "title": "Garden Signs",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Garden-Sign.jpeg"
       ]
     }
   ],
   "digital": [
     {
       "id": "pierscope1",
-      "title": "Pierscope1",
+      "title": "PierScope",
       "desc": "",
       "color": null,
       "section": "digital",
       "inProgress": true,
+      "frame": "phone",
       "photos": [
         "img/Pierscope1.jpeg",
         "img/Pierscope1-2.jpeg",
         "img/Pierscope1-3.jpeg"
+      ]
+    },
+    {
+      "id": "pierscope-companion-viewer",
+      "title": "PierScope Companion Viewer",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser",
+      "photos": [
+        "img/PierScope-Companion-Viewer.png"
+      ]
+    },
+    {
+      "id": "portfolio2",
+      "title": "Portfolio",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Portfolio2.png"
+      ]
+    },
+    {
+      "id": "kumiko-generator",
+      "title": "Kumiko Generator",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Kumiko-Generator.png"
+      ]
+    },
+    {
+      "id": "clarity1",
+      "title": "Clarity",
+      "desc": "Student Success Platform",
+      "color": null,
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser",
+      "photos": [
+        "img/Clarity1.png",
+        "img/Clarity1-2.jpeg",
+        "img/Clarity1-3.jpeg"
+      ]
+    },
+    {
+      "id": "inkpress1",
+      "title": "Inkpress",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Inkpress1.png",
+        "img/Inkpress1-2.jpeg",
+        "img/Inkpress1-3.jpeg",
+        "img/Inkpress1-4.jpeg"
+      ]
+    },
+    {
+      "id": "marble-track-generator",
+      "title": "Marble Track Generator",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Marble-Track-Generator.png"
+      ]
+    },
+    {
+      "id": "orbitframe1",
+      "title": "Orbit Frame App",
+      "desc": "Bluetooth control app for the motorized poster frame above. Thanks for the help James.",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "phone-image",
+      "photos": [
+        "img/OrbitFrame1.png",
+        "img/OrbitFrame1-2.jpeg"
       ]
     }
   ]

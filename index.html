@@ -77,7 +77,10 @@
       <a href="#digital" class="active" aria-current="true">Digital</a>
       <span class="count" id="dig-count"></span>
     </nav>
-    <div class="grid" id="digital-grid"></div>
+    <div class="digital-stage">
+      <div class="digital-phones" id="digital-phones"></div>
+      <div class="digital-browsers" id="digital-grid"></div>
+    </div>
   </section>
 </main>
 
@@ -101,6 +104,18 @@
     <span id="login-error" class="login-error" hidden></span>
   </span>
 </footer>
+
+<!-- ===== Drag-to-add overlay (top = Physical, bottom = Digital) ===== -->
+<div id="drop-overlay" class="drop-overlay" hidden aria-hidden="true">
+  <div class="drop-zone" data-section="physical">
+    <span class="dz-sub">Drop here to add to</span>
+    <span class="dz-label">Physical</span>
+  </div>
+  <div class="drop-zone" data-section="digital">
+    <span class="dz-sub">Drop here to add to</span>
+    <span class="dz-label">Digital</span>
+  </div>
+</div>
 
 <!-- ===== Lightbox ===== -->
 <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Project viewer" aria-hidden="true">

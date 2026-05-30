@@ -61,9 +61,62 @@
       "section": "physical"
     },
     "pierscope1": {
-      "title": "Pierscope1",
+      "title": "PierScope",
       "section": "digital",
-      "inProgress": true
+      "inProgress": true,
+      "frame": "phone"
+    },
+    "degas-box1": {
+      "title": "Degas Box",
+      "section": "physical"
+    },
+    "boardgame": {
+      "title": "Board Game",
+      "section": "physical"
+    },
+    "garden-sign": {
+      "title": "Garden Signs",
+      "section": "physical"
+    },
+    "pierscope-companion-viewer": {
+      "title": "PierScope Companion Viewer",
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser"
+    },
+    "portfolio": {
+      "section": "digital"
+    },
+    "clarity1": {
+      "title": "Clarity",
+      "desc": "Student Success Platform",
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser"
+    },
+    "inkpress1": {
+      "title": "Inkpress",
+      "section": "digital",
+      "frame": "browser"
+    },
+    "marble-track-generator": {
+      "section": "digital",
+      "frame": "browser"
+    },
+    "kumiko-generator": {
+      "section": "digital",
+      "frame": "browser"
+    },
+    "orbitframe1": {
+      "title": "Orbit Frame App",
+      "desc": "Bluetooth control app for the motorized poster frame above. Thanks for the help James.",
+      "section": "digital",
+      "frame": "phone-image"
+    },
+    "portfolio2": {
+      "title": "Portfolio",
+      "section": "digital",
+      "frame": "browser"
     }
   },
   "order": {
@@ -86,10 +139,24 @@
       "airbnb-sign",
       "cat-sign",
       "paper-towel-roll-holder",
-      "jerry"
+      "degas-box1",
+      "heart-box",
+      "jerry",
+      "bent-shelf",
+      "cookbook-holder",
+      "wood-ring",
+      "boardgame",
+      "garden-sign"
     ],
     "digital": [
-      "pierscope1"
+      "pierscope1",
+      "pierscope-companion-viewer",
+      "portfolio2",
+      "kumiko-generator",
+      "clarity1",
+      "inkpress1",
+      "marble-track-generator",
+      "orbitframe1"
     ]
   }
 }

@@ -128,6 +128,9 @@ function buildProjects(content) {
       color: meta.color || null,
       section: meta.section === 'digital' ? 'digital' : 'physical',
       inProgress: !!meta.inProgress,
+      // 'phone'/'browser' draw a CSS device frame; 'phone-image' shows an image that
+      // already contains its own device mockup (no CSS frame, just placed in the hero row)
+      frame: ['phone', 'browser', 'phone-image'].includes(meta.frame) ? meta.frame : 'none',
       photos,
     };
   }
