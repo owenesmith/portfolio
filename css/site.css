@@ -33,6 +33,20 @@
 
   --grain-opacity: 0.05;
   --rules-opacity: 0;
+
+  /* Physical→Digital scroll progress (0..1), written each frame by JS.
+     Both the page color and the grid overlay are derived off this one value. */
+  --digital: 0;
+  --digital-mid: 0;           /* triangle(--digital): peaks at the crossover, 0 at rest */
+  --digital-slate: #1b2735;   /* dark, techy target — dark blue-grey, not pure black */
+
+  /* Page-level text inverts opposite the background, off the SAME --digital.
+     Mockups/cards keep the base --ink*/--rule tokens, so their own text
+     (e.g. the browser address bar) stays dark on its light surface. */
+  --ink-pg:       color-mix(in oklab, #eaf0f6 calc(var(--digital) * 100%), var(--ink));
+  --ink-soft-pg:  color-mix(in oklab, #aab6c4 calc(var(--digital) * 100%), var(--ink-soft));
+  --ink-faint-pg: color-mix(in oklab, #8593a3 calc(var(--digital) * 100%), var(--ink-faint));
+  --rule-pg:      color-mix(in oklab, rgba(150, 172, 198, 0.32) calc(var(--digital) * 100%), var(--rule));
   --shadow-card: 0 1px 2px rgba(33, 27, 20, 0.04);
   --shadow-lift: 0 24px 48px -20px rgba(33, 27, 20, 0.32), 0 6px 14px -8px rgba(33, 27, 20, 0.18);
   /* soft, diffuse shadow that floats the device mockups off the page */
@@ -44,8 +58,11 @@
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body {
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--bg);  /* fallback for browsers without color-mix */
+  /* Crossfade warm paper → dark slate, driven by the same --digital as the grid.
+     oklab keeps the midtones from going muddy. p=0 → var(--bg); p=1 → slate. */
+  background: color-mix(in oklab, var(--digital-slate) calc(var(--digital) * 100%), var(--bg));
+  color: var(--ink-pg);   /* on-bg text inverts as the page darkens (catches .title, h2, footer-left) */
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
@@ -89,6 +106,21 @@ body::after {
     repeating-linear-gradient(to bottom,
       transparent 0, transparent 46px,
       rgba(33, 27, 20, var(--rules-opacity)) 46px, rgba(33, 27, 20, var(--rules-opacity)) 48px);
+}
+
+/* Digital-section grid: finer than the 48px physical rules, fades in with --digital.
+   Injected by JS (markup stays untouched). Sits at z-index 0, behind content. */
+.digital-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;                 /* beats `body > * { z-index: 1 }` — stays behind content */
+  pointer-events: none;
+  opacity: var(--digital);    /* whole layer fades 0→1; line alpha below keeps it faint */
+  background-image:
+    linear-gradient(to right,  rgba(122, 170, 205, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(122, 170, 205, 0.10) 1px, transparent 1px);
+  background-size: 26px 26px;
+  will-change: opacity;
 }
 
 body > * { position: relative; z-index: 1; }
@@ -177,7 +209,7 @@ body > * { position: relative; z-index: 1; }
    =================================================================== */
 main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 .section { scroll-margin-top: 1.25rem; }
-#digital { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--rule); }
+#digital { margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--rule-pg); }
 
 /* Digital layout: two equal-height phones centered up top, then a full-width 2-column
    grid of browser mockups beneath (spanning the same width as the Physical grid).
@@ -204,6 +236,11 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 /* digital is a showcase, not the numbered catalogue — drop the index, left-align captions */
 #digital .index-num { display: none; }
 #digital .desc-wrap { margin-left: 0; }
+/* Digital titles sit on the dark slate — keep them plainly white (independent of scroll). */
+#digital .title { color: #fff; }
+#digital .card:hover .title { color: var(--accent); }
+/* "Read more" toggle on the dark slate — white for contrast (hover underline follows currentColor). */
+#digital .readmore { color: #fff; }
 @media (max-width: 640px) {
   .digital-browsers { grid-template-columns: 1fr; }
 }
@@ -212,14 +249,18 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 .toggle a {
   font-family: var(--font-display); font-size: clamp(1.5rem, 3.2vw, 2.1rem);
   font-weight: 400; letter-spacing: -0.02em; line-height: 1; text-decoration: none;
-  color: var(--ink-soft); opacity: 0.38; transition: opacity 0.25s var(--ease), color 0.25s var(--ease);
+  color: var(--ink-soft-pg); opacity: 0.38; transition: opacity 0.25s var(--ease), color 0.25s var(--ease);
+  /* dual emboss, alpha gated to the crossover only — keeps the label legible mid-blend */
+  text-shadow:
+    0 1px 2px rgba(12, 17, 25, calc(0.42 * var(--digital-mid))),
+    0 -1px 2px rgba(238, 244, 250, calc(0.22 * var(--digital-mid)));
 }
 .toggle a:hover { opacity: 0.75; }
-.toggle a.active { color: var(--ink); opacity: 1; font-weight: 500; }
-.toggle .divider { width: 1px; align-self: stretch; min-height: 1.6rem; background: var(--rule); }
+.toggle a.active { color: var(--ink-pg); opacity: 1; font-weight: 500; }
+.toggle .divider { width: 1px; align-self: stretch; min-height: 1.6rem; background: var(--rule-pg); }
 .toggle .count {
   margin-left: auto; font-family: var(--font-mono); font-size: 0.72rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint-pg);
 }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 3.2rem 2rem; }
@@ -409,12 +450,15 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 .meta { margin-top: 1.05rem; display: flex; align-items: baseline; gap: 0.8rem; }
 .index-num {
   font-family: var(--font-mono); font-weight: 400; font-size: 0.74rem;
-  color: var(--ink-faint); min-width: 1.6rem; letter-spacing: 0.04em;
+  color: var(--ink-faint-pg); min-width: 1.6rem; letter-spacing: 0.04em;
   padding-top: 0.18rem;
 }
 .title {
   font-family: var(--font-display); font-weight: 500; font-size: 1.28rem;
   letter-spacing: -0.01em; line-height: 1.2; font-variation-settings: "opsz" 40;
+  text-shadow:
+    0 1px 2px rgba(12, 17, 25, calc(0.34 * var(--digital-mid))),
+    0 -1px 1px rgba(238, 244, 250, calc(0.16 * var(--digital-mid)));
 }
 .card:hover .title { color: var(--accent); }
 .title { transition: color 0.3s var(--ease); }
@@ -429,7 +473,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 }
 .readmore:hover { border-bottom-color: currentColor; }
 .desc-panel { max-height: 0; overflow: hidden; transition: max-height 0.45s var(--ease); }
-.desc-panel .desc { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; max-width: 42ch; text-wrap: pretty; }
+.desc-panel .desc { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-soft-pg); line-height: 1.6; max-width: 42ch; text-wrap: pretty; }
 html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
 
 /* digital placeholders */
@@ -439,7 +483,7 @@ html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
   font-family: var(--font-display); font-style: italic; font-size: 1.05rem;
   color: color-mix(in oklab, var(--bg-card) 80%, transparent);
 }
-.placeholder-card .title { color: var(--ink-soft); font-weight: 400; }
+.placeholder-card .title { color: var(--ink-soft-pg); font-weight: 400; }
 .placeholder-card:hover .frame { transform: none; box-shadow: var(--shadow-card); }
 
 /* ===================================================================
@@ -449,7 +493,7 @@ html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
   max-width: var(--maxw); margin: 0 auto; padding: 0 2rem;
 }
 .commission-inner {
-  border-top: 1px solid var(--rule); padding: clamp(3rem, 6vw, 5rem) 0 1rem;
+  border-top: 1px solid var(--rule-pg); padding: clamp(3rem, 6vw, 5rem) 0 1rem;
   display: flex; justify-content: center;
 }
 .commission h2 {
@@ -458,7 +502,7 @@ html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
   font-variation-settings: "opsz" 144;
 }
 .commission h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
-.commission p { margin-top: 1rem; color: var(--ink-soft); max-width: 38ch; text-wrap: pretty; }
+.commission p { margin-top: 1rem; color: var(--ink-soft-pg); max-width: 38ch; text-wrap: pretty; }
 .commission-cta { display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-start; }
 .btn-mail {
   display: inline-flex; align-items: center; gap: 0.6rem;
@@ -469,7 +513,7 @@ html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
 }
 .btn-mail:hover { transform: translateY(-2px); filter: brightness(1.07); }
 .btn-mail svg { width: 16px; height: 16px; }
-.commission-note { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint); text-transform: uppercase; }
+.commission-note { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint-pg); text-transform: uppercase; }
 
 /* ===================================================================
    FOOTER
@@ -477,15 +521,15 @@ html[data-direction="editorial"] .desc-wrap { margin-left: 0; }
 footer {
   max-width: var(--maxw); margin: 0 auto;
   padding: 2.5rem 2rem; margin-top: clamp(3rem, 6vw, 5rem);
-  border-top: 1px solid var(--rule);
-  font-size: 0.85rem; color: var(--ink-soft);
+  border-top: 1px solid var(--rule-pg);
+  font-size: 0.85rem; color: var(--ink-soft-pg);
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
 }
 .footer-left { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; }
 .footer-right { display: inline-flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
+footer a { color: var(--ink-soft-pg); text-decoration: none; border-bottom: 1px solid var(--rule-pg); transition: color 0.2s var(--ease), border-color 0.2s var(--ease); }
 footer a:hover { color: var(--accent); border-color: var(--accent); }
-.textlink { background: none; border: none; padding: 0; font: inherit; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); cursor: pointer; border-bottom: 1px solid transparent; }
+.textlink { background: none; border: none; padding: 0; font: inherit; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint-pg); cursor: pointer; border-bottom: 1px solid transparent; }
 .textlink:hover { color: var(--accent); border-color: var(--accent); }
 .login-form { display: inline-flex; align-items: center; gap: 0.4rem; }
 .login-form input { font: inherit; font-size: 0.85rem; padding: 0.28rem 0.5rem; border: 1px solid var(--rule); border-radius: 5px; background: var(--bg-card); color: var(--ink); width: 9.5rem; }

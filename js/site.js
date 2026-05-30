@@ -659,11 +659,54 @@
     sections.forEach(s => io.observe(s));
   }
 
+  // ---------- Scroll-driven Physical→Digital background shift ----------
+  // Reads POSITION every frame (rAF-throttled), so it tracks both manual scroll
+  // and the native smooth-scroll fired by the "Digital" nav anchor, and reverses
+  // when scrolling back up. Writes one custom property; CSS derives color + grid.
+  function initBgShift() {
+    const digital = document.getElementById('digital');
+    if (!digital) return;
+    const root = document.documentElement;
+
+    // Fine grid overlay (injected here so the markup is left untouched).
+    const grid = document.createElement('div');
+    grid.className = 'digital-bg';
+    grid.setAttribute('aria-hidden', 'true');
+    document.body.prepend(grid);
+
+    let ticking = false;
+    function measure() {
+      ticking = false;
+      // Reads first (no interleaved writes → no layout thrash).
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const boundary = digital.getBoundingClientRect().top; // viewport-relative top of #digital
+      // p = 0.5 when the boundary sits at the viewport CENTER; the fade spans ~one
+      // viewport total (≈ half a viewport on each side). Boundary above center → techy.
+      const travel = vh;                            // total fade distance; tune for feel
+      let p = 0.5 + (vh / 2 - boundary) / travel;
+      p = p < 0 ? 0 : p > 1 ? 1 : p;                // clamp [0,1]
+      // Writes (batched after the reads above).
+      root.style.setProperty('--digital', p.toFixed(4));
+      // Peaks at the crossover, 0 at either rest state — gates a faint legibility
+      // halo so text never washes out as it and the bg pass through mid-grey together.
+      root.style.setProperty('--digital-mid', (1 - Math.abs(2 * p - 1)).toFixed(4));
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(measure);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    measure(); // correct on load (incl. deep-link straight to #digital)
+  }
+
   // ---------- Init ----------
   (async () => {
     await loadData();
     render();
     initScrollSpy();
+    initBgShift();
     const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
   })();
 })();
