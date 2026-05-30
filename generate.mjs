@@ -127,6 +127,7 @@ function buildProjects(content) {
       desc: meta.desc || '',
       color: meta.color || null,
       section: meta.section === 'digital' ? 'digital' : 'physical',
+      inProgress: !!meta.inProgress,
       photos,
     };
   }

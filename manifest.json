@@ -6,6 +6,7 @@
       "desc": "Walnut and Purpleheart Beams, with Maple base. UV laser engraved and cut glass topper, CNC engraved diffuser.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Kumiko-Style-Lamp-1.jpeg",
         "img/Kumiko-Style-Lamp-2.jpeg",
@@ -19,6 +20,7 @@
       "desc": "Maple, Walnut, Purpleheart, Padauk, with Brass + Rubber Feet.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Cutting-Board-1.jpeg",
         "img/Cutting-Board-2.jpeg"
@@ -30,6 +32,7 @@
       "desc": "Maple + Walnut, Epoxy fill street map and brass Union Pier inlay, glass front.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Charleston-Union-Pier-Map-1.jpeg",
         "img/Charleston-Union-Pier-Map-2.jpeg",
@@ -42,6 +45,7 @@
       "desc": "Maple, Walnut, Oak, with Intentionality tokens.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Balance-Scale-2.jpeg"
       ]
@@ -52,6 +56,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Tree-Bookshelf.jpeg"
       ]
@@ -62,6 +67,7 @@
       "desc": "Battery operated oak frame containing 10 posters on a motorized scroll with backlighting, controllable by bluetooth app.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Rotating-Poster-Frame-1.mp4",
         "img/Rotating-Poster-Frame-2.jpeg",
@@ -75,6 +81,7 @@
       "desc": "Bent Lamination",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Curvy-Shelf-1.jpeg",
         "img/Curvy-Shelf-2.jpeg"
@@ -86,6 +93,7 @@
       "desc": "Uses custom program to take 3D file, break into pieces, scale for depth and refractive index, and align to focal point.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Anamorphic-Crystal-Engraving-1.jpeg",
         "img/Anamorphic-Crystal-Engraving-2.jpeg"
@@ -97,6 +105,7 @@
       "desc": "Walnut, brass + epoxy inlays, and glass shelf.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Habit-Tracker.jpeg"
       ]
@@ -107,6 +116,7 @@
       "desc": "Walnut and Maple, hollow octagonal pole with internal wiring and brass topper.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Walnut-Maple-Lamp.jpeg"
       ]
@@ -117,6 +127,7 @@
       "desc": "9lb solid welded steel with brass topper.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Steel-Paper-Towel-Roll-Holder.jpeg"
       ]
@@ -127,6 +138,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Walnut-Fireplace-Mantle.jpeg"
       ]
@@ -137,6 +149,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Slate-Coasters.jpeg"
       ]
@@ -147,6 +160,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Cork-Engraved-Coasters.jpeg"
       ]
@@ -157,6 +171,7 @@
       "desc": "Walnut + Maple",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Walnut-Maple-Tongs-1.jpeg",
         "img/Walnut-Maple-Tongs-2.jpeg"
@@ -168,6 +183,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/AirBnB-Sign.jpeg"
       ]
@@ -178,6 +194,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Cat-Sign.jpeg"
       ]
@@ -188,6 +205,7 @@
       "desc": "",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Paper-Towel-Roll-Holder.jpeg"
       ]
@@ -198,6 +216,7 @@
       "desc": "This is Jerry.",
       "color": null,
       "section": "physical",
+      "inProgress": false,
       "photos": [
         "img/Jerry.jpeg"
       ]

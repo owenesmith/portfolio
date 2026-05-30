@@ -14,7 +14,6 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PASS_HASH = "d65ee151f642081b0f161569f1981ec6309bbee92525ee85796a8f8a44fbd230";
   const ORDER_KEY = "portfolio.order.v1";
-  const DIGITAL_PLACEHOLDERS = ["#4a4a52", "#6b4423", "#5e5e68"];
   const ZOOM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>';
   // curated, honest materials list drawn from the work itself
   const MATERIALS = ["Walnut", "Maple", "Purpleheart", "Padauk", "Oak", "Steel", "Slate", "Cork", "Glass", "Veneer", "Brass"];
@@ -150,9 +149,10 @@
     const dots = multi ? `<div class="dots">${p.photos.map((_, idx) => `<span class="dot ${idx === 0 ? 'active' : ''}"></span>`).join('')}</div>` : '';
     const arrows = multi ? `<button class="nav prev" aria-label="Previous">‹</button><button class="nav next" aria-label="Next">›</button>` : '';
     const cue = `<span class="view-cue">${ZOOM_SVG} View</span>`;
+    const wip = p.inProgress ? `<span class="wip-tag">In&nbsp;Progress</span>` : '';
     const descBlock = p.desc ? `<div class="desc-wrap"><button class="readmore" type="button" aria-expanded="false">Read more</button><div class="desc-panel"><p class="desc">${esc(p.desc)}</p></div></div>` : '';
     card.innerHTML = `
-      <div class="frame" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${isNew ? '<span class="newbadge">New</span>' : ''}${media}${cue}${arrows}${dots}</div>
+      <div class="frame" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${isNew ? '<span class="newbadge">New</span>' : ''}${wip}${media}${cue}${arrows}${dots}</div>
       <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">${esc(p.title)}</h2><button class="editbtn" type="button">✎ Edit</button></div>
       ${descBlock}`;
 
@@ -196,18 +196,23 @@
     if (editMode) makeDraggable(card);
     return card;
   }
-  function placeholderCard(color, i) {
-    return `<article class="card placeholder-card" style="--card-accent:${color}"><div class="frame"><span class="ph-label">Coming soon</span></div><div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">Digital project</h2></div></article>`;
-  }
   function render() {
     carousels = [];
     const known = knownIds();
     gridP.innerHTML = '';
     MANIFEST.physical.forEach((p, i) => gridP.appendChild(buildCard(p, i, 'physical', editMode && canEdit() && !known.has(p.id))));
-    if (MANIFEST.digital && MANIFEST.digital.length) { gridD.innerHTML = ''; MANIFEST.digital.forEach((p, i) => gridD.appendChild(buildCard(p, i, 'digital', editMode && canEdit() && !known.has(p.id)))); }
-    else { gridD.innerHTML = DIGITAL_PLACEHOLDERS.map((c, i) => placeholderCard(c, i)).join(''); }
+    if (MANIFEST.digital && MANIFEST.digital.length) {
+      gridD.innerHTML = '';
+      MANIFEST.digital.forEach((p, i) => gridD.appendChild(buildCard(p, i, 'digital', editMode && canEdit() && !known.has(p.id))));
+    } else {
+      gridD.innerHTML = editMode
+        ? '<p class="empty-hint">No digital work yet — add an image (or “+ New work”), then ✎ Edit it and set its Section to “Digital”.</p>'
+        : '';
+    }
     const cnt = document.getElementById('phys-count');
     if (cnt) cnt.textContent = String(MANIFEST.physical.length).padStart(2, '0') + ' works';
+    const dcnt = document.getElementById('dig-count');
+    if (dcnt) dcnt.textContent = MANIFEST.digital.length ? String(MANIFEST.digital.length).padStart(2, '0') + ' works' : '';
     renderStats();
     startConductor();
   }
@@ -315,6 +320,7 @@
       <textarea class="ed-desc" placeholder="Description (optional)">${esc(p.desc)}</textarea>
       <div class="ed-row"><label>Section</label>
         <select class="ed-section"><option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option><option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option></select>
+        <label class="ed-wip"><input type="checkbox" class="ed-inprogress"${p.inProgress ? ' checked' : ''}> In&nbsp;Progress</label>
         <button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button><button class="ed-hide" type="button">Hide</button>
       </div>
       <div class="ed-label">Images <span class="ed-hint">⟲ replace · ✕ remove</span></div>
@@ -325,10 +331,11 @@
     ed.querySelector('.ed-cancel').addEventListener('click', () => { ed.remove(); openEditorEl = null; });
     ed.querySelector('.ed-save').addEventListener('click', async () => {
       const title = ed.querySelector('.ed-title').value.trim(), desc = ed.querySelector('.ed-desc').value.trim(), newSection = ed.querySelector('.ed-section').value;
+      const wip = ed.querySelector('.ed-inprogress').checked;
       CONTENT.items = CONTENT.items || {};
-      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined };
+      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined, inProgress: wip || undefined };
       ensureOrder(p.id, newSection);
-      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; }
+      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; proj.inProgress = wip; }
       openEditorEl = null;
       await persist('Edit “' + (title || p.title) + '”');
     });

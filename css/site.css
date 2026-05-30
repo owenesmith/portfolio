@@ -231,6 +231,18 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
 .card:hover .view-cue { opacity: 1; transform: translateY(0); }
 .view-cue svg { width: 11px; height: 11px; }
 
+/* "In Progress" tag — top-right of the frame, subtle but readable, always visible */
+.wip-tag {
+  position: absolute; top: 0.7rem; right: 0.7rem; z-index: 3; pointer-events: none;
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); background: color-mix(in oklab, var(--bg-card) 82%, transparent);
+  backdrop-filter: blur(6px); padding: 0.26rem 0.55rem; border-radius: 100px;
+  box-shadow: 0 1px 3px rgba(33, 27, 20, 0.14);
+}
+.empty-hint { color: var(--ink-faint); font-family: var(--font-display); font-style: italic; font-size: 0.95rem; padding: 0.4rem 0 1rem; }
+.editor .ed-wip { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--ink-soft); cursor: pointer; white-space: nowrap; }
+.editor .ed-wip input { width: auto; }
+
 .nav {
   position: absolute; top: 50%; transform: translateY(-50%);
   width: 38px; height: 38px; border: none;
