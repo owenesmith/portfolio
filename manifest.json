@@ -173,6 +173,16 @@
       ]
     },
     {
+      "id": "jerry",
+      "title": "Jerry",
+      "desc": "Jerry",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Jerry.jpeg"
+      ]
+    },
+    {
       "id": "cat-sign",
       "title": "Cat Sign",
       "desc": "",
@@ -190,16 +200,6 @@
       "section": "physical",
       "photos": [
         "img/Paper-Towel-Roll-Holder.jpeg"
-      ]
-    },
-    {
-      "id": "jerry",
-      "title": "Jerry",
-      "desc": "Jerry",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Jerry.jpeg"
       ]
     }
   ],
