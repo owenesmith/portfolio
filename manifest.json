@@ -183,16 +183,6 @@
       ]
     },
     {
-      "id": "jerry",
-      "title": "Jerry",
-      "desc": "Jerry",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Jerry.jpeg"
-      ]
-    },
-    {
       "id": "paper-towel-roll-holder",
       "title": "Paper Towel Roll Holder",
       "desc": "",
@@ -200,6 +190,16 @@
       "section": "physical",
       "photos": [
         "img/Paper-Towel-Roll-Holder.jpeg"
+      ]
+    },
+    {
+      "id": "jerry",
+      "title": "Jerry",
+      "desc": "Jerry",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Jerry.jpeg"
       ]
     }
   ],
