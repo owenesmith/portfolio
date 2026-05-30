@@ -173,16 +173,6 @@
       ]
     },
     {
-      "id": "jerry",
-      "title": "Jerry",
-      "desc": "Jerry",
-      "color": null,
-      "section": "physical",
-      "photos": [
-        "img/Jerry.jpeg"
-      ]
-    },
-    {
       "id": "cat-sign",
       "title": "Cat Sign",
       "desc": "",
@@ -190,6 +180,16 @@
       "section": "physical",
       "photos": [
         "img/Cat-Sign.jpeg"
+      ]
+    },
+    {
+      "id": "jerry",
+      "title": "Jerry",
+      "desc": "Jerry",
+      "color": null,
+      "section": "physical",
+      "photos": [
+        "img/Jerry.jpeg"
       ]
     },
     {
