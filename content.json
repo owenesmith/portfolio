@@ -62,7 +62,8 @@
     },
     "pierscope1": {
       "title": "Pierscope1",
-      "section": "digital"
+      "section": "digital",
+      "inProgress": true
     }
   },
   "order": {
