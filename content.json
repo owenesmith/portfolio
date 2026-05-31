@@ -192,6 +192,11 @@
       "title": "Vision Board App",
       "section": "digital",
       "frame": "browser"
+    },
+    "heart-box": {
+      "title": "Heart Box",
+      "desc": "Oak Wood",
+      "section": "physical"
     }
   },
   "order": {
