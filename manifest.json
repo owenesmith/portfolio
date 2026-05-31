@@ -396,7 +396,7 @@
     {
       "id": "ros",
       "title": "4 Axis + Gripper Robotic Arm Operating System",
-      "desc": "Designed for the BCN3D Moveo Arm",
+      "desc": "Designed for the BCN3D Moveo Arm, offers keyboard control and macro recording.",
       "link": "",
       "color": null,
       "section": "digital",
