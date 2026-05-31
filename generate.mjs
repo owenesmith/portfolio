@@ -12,6 +12,7 @@
 // ============================================================
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
@@ -19,6 +20,7 @@ const IMG = path.join(ROOT, 'img');
 const ORIG = path.join(IMG, '_originals');
 const CONTENT_FILE = path.join(ROOT, 'content.json');
 const MANIFEST_FILE = path.join(ROOT, 'manifest.json');
+const INDEX_FILE = path.join(ROOT, 'index.html');
 
 const IMAGE_EXT = new Set(['.jpeg', '.jpg', '.png', '.webp']);
 const VIDEO_EXT = new Set(['.mp4', '.webm', '.m4v']);
@@ -163,6 +165,32 @@ function order(projects, content) {
   return out;
 }
 
+// ---- Cache-bust the CSS/JS the page loads ----
+// index.html references css/site.css and js/site.js with no version, and GitHub Pages serves
+// them with max-age=600. After a code change a returning visitor can get the NEW index.html
+// but a CACHED old css/js — an incompatible mix that breaks the page for up to 10 minutes.
+// Stamping a short content hash (?v=…) makes the URL change whenever the file changes, so new
+// HTML always pulls matching assets — the deploy is atomic from the browser's point of view.
+// Hash-based, so it only changes when the file does (no spurious diffs). Best-effort: never
+// let a stamping hiccup fail a manifest regeneration / content save.
+function stampAssets() {
+  if (!fs.existsSync(INDEX_FILE)) return;
+  const assets = ['css/site.css', 'js/site.js'];
+  const hash = {};
+  for (const a of assets) {
+    const f = path.join(ROOT, a);
+    if (!fs.existsSync(f)) return; // an asset is missing — leave index.html untouched
+    hash[a] = crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex').slice(0, 8);
+  }
+  const before = fs.readFileSync(INDEX_FILE, 'utf8');
+  let html = before;
+  for (const a of assets) {
+    const re = new RegExp(`((?:href|src)="${a.replace(/\./g, '\\.')})(?:\\?v=[^"]*)?"`, 'g');
+    html = html.replace(re, `$1?v=${hash[a]}"`);
+  }
+  if (html !== before) { fs.writeFileSync(INDEX_FILE, html); log(`Stamped asset versions in index.html (css ${hash['css/site.css']}, js ${hash['js/site.js']}).`); }
+}
+
 function generate() {
   if (!fs.existsSync(IMG)) { console.error('No img/ folder'); process.exit(1); }
   const content = fs.existsSync(CONTENT_FILE) ? JSON.parse(fs.readFileSync(CONTENT_FILE, 'utf8')) : { items: {}, order: {} };
@@ -180,6 +208,7 @@ function generate() {
 
   fs.writeFileSync(MANIFEST_FILE, JSON.stringify(manifest, null, 2) + '\n');
   log(`\nWrote manifest.json: ${manifest.physical.length} physical, ${manifest.digital.length} digital.`);
+  try { stampAssets(); } catch (e) { console.error('stampAssets skipped:', e.message); }
   if (newOnes.length) log(`New (unconfigured) item(s): ${newOnes.map((p) => p.id).join(', ')}`);
   return { manifest, newOnes };
 }
