@@ -153,7 +153,9 @@
     },
     "kumiko-generator": {
       "title": "Kumiko Woodworking Pattern Generator",
+      "desc": "Generates custom Kumiko patters based on parameters for woodworking project.",
       "section": "digital",
+      "inProgress": true,
       "frame": "browser"
     },
     "orbitframe1": {
