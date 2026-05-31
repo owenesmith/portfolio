@@ -415,18 +415,6 @@
       "frame": "browser"
     },
     {
-      "id": "kumiko-generator",
-      "title": "Kumiko Woodworking Pattern Generator",
-      "desc": "",
-      "color": null,
-      "section": "digital",
-      "inProgress": false,
-      "frame": "browser",
-      "photos": [
-        "img/Kumiko-Generator.png"
-      ]
-    },
-    {
       "id": "inkpress1",
       "title": "Inkpress",
       "desc": "",
@@ -439,6 +427,18 @@
         "img/Inkpress1-2.jpeg",
         "img/Inkpress1-3.jpeg",
         "img/Inkpress1-4.jpeg"
+      ]
+    },
+    {
+      "id": "kumiko-generator",
+      "title": "Kumiko Woodworking Pattern Generator",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Kumiko-Generator.png"
       ]
     },
     {
