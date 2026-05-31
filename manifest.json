@@ -450,7 +450,7 @@
     {
       "id": "inkpress1",
       "title": "Inkpress",
-      "desc": "",
+      "desc": "Takes input image and breaks it into color layers, and creates halftone or solid laser files for creating linoleum print plates.",
       "link": "",
       "color": null,
       "section": "digital",
