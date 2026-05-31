@@ -160,6 +160,7 @@
     },
     "portfolio2": {
       "title": "Portfolio",
+      "desc": "Custom Portfolio Site.",
       "section": "digital",
       "frame": "browser"
     },
