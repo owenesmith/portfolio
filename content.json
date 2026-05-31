@@ -134,6 +134,9 @@
       "title": "Crystal anamorphic sculptor",
       "section": "digital",
       "frame": "browser"
+    },
+    "crystal-anamorphic-sculptor": {
+      "section": "digital"
     }
   },
   "order": {
@@ -175,7 +178,8 @@
       "inkpress1",
       "kumiko-generator",
       "marble-track-generator",
-      "orbitframe1"
+      "orbitframe1",
+      "crystal-anamorphic-sculptor"
     ]
   }
 }
