@@ -836,22 +836,6 @@
   let flashTimer;
   function flashMsg(msg) { editMsg.textContent = msg; clearTimeout(flashTimer); flashTimer = setTimeout(chrome, 4000); }
 
-  // ---------- Scroll-spy for the section nav ----------
-  function initScrollSpy() {
-    const links = document.querySelectorAll('.toggle a');
-    const sections = ['physical', 'digital'].map(id => document.getElementById(id)).filter(Boolean);
-    if (!('IntersectionObserver' in window) || !sections.length) return;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (en.isIntersecting) {
-          const id = en.target.id;
-          links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
-        }
-      });
-    }, { rootMargin: '-30% 0px -60% 0px' });
-    sections.forEach(s => io.observe(s));
-  }
-
   // ---------- Scroll-driven Physical→Digital background shift ----------
   // Reads POSITION every frame (rAF-throttled), so it tracks both manual scroll
   // and the native smooth-scroll fired by the "Digital" nav anchor, and reverses
@@ -860,6 +844,7 @@
     const digital = document.getElementById('digital');
     if (!digital) return;
     const root = document.documentElement;
+    const navLinks = document.querySelectorAll('.toggle a');
 
     // Fine grid overlay (injected here so the markup is left untouched).
     const grid = document.createElement('div');
@@ -883,6 +868,12 @@
       // Peaks at the crossover, 0 at either rest state — gates a faint legibility
       // halo so text never washes out as it and the bg pass through mid-grey together.
       root.style.setProperty('--digital-mid', (1 - Math.abs(2 * p - 1)).toFixed(4));
+      // Section-nav active state, derived from the SAME boundary. (Replaces an
+      // IntersectionObserver band that missed #physical on tall mobile heroes, so the nav
+      // stayed stuck on "Digital" after a scroll-to-top until you nudged the page.) Runs every
+      // scroll frame — incl. the back-to-top animation — so the top always resolves to Physical.
+      const inDigital = boundary < vh * 0.4;
+      navLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === (inDigital ? '#digital' : '#physical')));
     }
     function onScroll() {
       if (ticking) return;
@@ -943,7 +934,6 @@
   (async () => {
     await loadData();
     render();
-    initScrollSpy();
     initBgShift();
     initSmoothNav();
     initBackToTop();
