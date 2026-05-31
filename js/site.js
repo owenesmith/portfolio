@@ -32,6 +32,26 @@
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const pretty = (o) => JSON.stringify(o, null, 2) + "\n";
+  // normalize a user-entered URL to an absolute href (assume https:// if no scheme given)
+  const linkHref = (u) => { const s = String(u || '').trim(); return /^[a-z][\w+.-]*:\/\//i.test(s) ? s : 'https://' + s.replace(/^\/+/, ''); };
+  // Turn plain description text into safe HTML: escape everything, turn URLs into links
+  // (new tab), and keep line breaks. URLs are matched then escaped, so this stays XSS-safe.
+  function linkify(text) {
+    const s = String(text == null ? '' : text);
+    const escNl = (str) => esc(str).replace(/\n/g, '<br>');
+    const urlRe = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi;
+    let out = '', last = 0, m;
+    while ((m = urlRe.exec(s))) {
+      out += escNl(s.slice(last, m.index));
+      let url = m[0], trail = '';
+      const tm = url.match(/[.,;:!?)\]]+$/); // don't swallow trailing sentence punctuation
+      if (tm) { trail = tm[0]; url = url.slice(0, -trail.length); }
+      out += `<a class="desc-link" href="${esc(linkHref(url))}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` + esc(trail);
+      last = m.index + m[0].length;
+    }
+    out += escNl(s.slice(last));
+    return out;
+  }
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // grouping helpers (mirror generate.mjs)
@@ -290,10 +310,13 @@
     const arrows = multi ? `<button class="nav prev" aria-label="Previous">‹</button><button class="nav next" aria-label="Next">›</button>` : '';
     const cue = `<span class="view-cue">${ZOOM_SVG} View</span>`;
     const wip = p.inProgress ? `<span class="wip-tag">In&nbsp;Progress</span>` : '';
-    const descBlock = p.desc ? `<div class="desc-wrap"><button class="readmore" type="button" aria-expanded="false">Read more</button><div class="desc-panel"><p class="desc">${esc(p.desc)}</p></div></div>` : '';
+    const descBlock = p.desc ? `<div class="desc-wrap"><button class="readmore" type="button" aria-expanded="false">Read more</button><div class="desc-panel"><p class="desc">${linkify(p.desc)}</p></div></div>` : '';
+    const titleHtml = p.link
+      ? `<a class="title-link" href="${esc(linkHref(p.link))}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a>`
+      : esc(p.title);
     card.innerHTML = `
       <div class="frame frame--${p.frame || 'none'}" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${isNew ? '<span class="newbadge">New</span>' : ''}${wip}${mockupWrap(p, media)}${cue}${arrows}${dots}</div>
-      <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">${esc(p.title)}</h2><button class="editbtn" type="button">✎ Edit</button></div>
+      <div class="meta"><span class="index-num">${String(i + 1).padStart(2, '0')}</span><h2 class="title">${titleHtml}</h2><button class="editbtn" type="button">✎ Edit</button></div>
       ${descBlock}`;
 
     const frame = card.querySelector('.frame');
@@ -494,7 +517,8 @@
     }).join('');
     ed.innerHTML = `
       <input class="ed-title" value="${esc(p.title)}" placeholder="Title">
-      <textarea class="ed-desc" placeholder="Description (optional)">${esc(p.desc)}</textarea>
+      <input class="ed-link" type="url" value="${esc(p.link || '')}" placeholder="Title link (optional) — paste a URL to make the title clickable">
+      <textarea class="ed-desc" placeholder="Description (optional) — paste links and they become clickable">${esc(p.desc)}</textarea>
       <div class="ed-row"><label>Section</label>
         <select class="ed-section"><option value="physical"${section === 'physical' ? ' selected' : ''}>Physical</option><option value="digital"${section === 'digital' ? ' selected' : ''}>Digital</option></select>
         <label>Frame</label>
@@ -512,10 +536,11 @@
       const title = ed.querySelector('.ed-title').value.trim(), desc = ed.querySelector('.ed-desc').value.trim(), newSection = ed.querySelector('.ed-section').value;
       const wip = ed.querySelector('.ed-inprogress').checked;
       const frame = ed.querySelector('.ed-frame').value;
+      const link = ed.querySelector('.ed-link').value.trim();
       CONTENT.items = CONTENT.items || {};
-      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined, inProgress: wip || undefined, frame: (frame !== 'none') ? frame : undefined };
+      CONTENT.items[p.id] = { title: title || undefined, desc: desc || undefined, link: link || undefined, section: newSection, color: (CONTENT.items[p.id] || {}).color || undefined, inProgress: wip || undefined, frame: (frame !== 'none') ? frame : undefined };
       ensureOrder(p.id, newSection);
-      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.section = newSection; proj.inProgress = wip; proj.frame = frame; }
+      moveProject(p.id, section, newSection); const proj = findProject(p.id); if (proj) { proj.title = title || titleFromBase(baseOf(p.photos[0].split('/').pop())); proj.desc = desc; proj.link = link; proj.section = newSection; proj.inProgress = wip; proj.frame = frame; }
       openEditorEl = null;
       await persist('Edit “' + (title || p.title) + '”');
     });

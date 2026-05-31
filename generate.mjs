@@ -135,6 +135,7 @@ function buildProjects(content) {
       id: slug,
       title: meta.title || titleFromBase(g.base),
       desc: meta.desc || '',
+      link: meta.link || '',   // optional URL — makes the card title a clickable link
       color: meta.color || null,
       section: meta.section === 'digital' ? 'digital' : 'physical',
       inProgress: !!meta.inProgress,
