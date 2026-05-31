@@ -33,11 +33,10 @@
         "title": "Languages",
         "items": [
           "Python",
-          "JavaScript",
-          "C++",
+          "Typescript",
           "Swift",
           "HTML / CSS",
-          "Typescript"
+          "JavaScript"
         ]
       }
     ]
