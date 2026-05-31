@@ -384,7 +384,7 @@
       "id": "pierscope-companion-viewer",
       "title": "PierScope Companion Viewer",
       "desc": "Website for viewing data collected from PierScope app.",
-      "link": "",
+      "link": "https://owenesmith.github.io/fieldscope-viewer/",
       "color": null,
       "section": "digital",
       "inProgress": true,
