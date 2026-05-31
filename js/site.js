@@ -173,13 +173,55 @@
     site.lists.forEach((list, idx) => {
       const el = document.createElement('div');
       el.className = 'stat stat--list';
+      el.dataset.listIdx = idx;
       el.innerHTML = `<span class="stat-num">${list.items.map(esc).join('  ·  ')}</span>`
-        + `<span class="stat-label">${esc(list.title)}</span>`
+        + `<span class="stat-label"><button class="list-drag-handle" type="button" aria-label="Drag to reorder ${esc(list.title)}" title="Drag to reorder">⠿</button>${esc(list.title)}</span>`
         + `<button class="hero-edit" type="button" aria-label="Edit ${esc(list.title)} list">✎</button>`;
       el.querySelector('.hero-edit').addEventListener('click', () => openListEditor(idx));
       col.appendChild(el);
     });
     stats.appendChild(col);
+    makeListsSortable(col); // handles are CSS-hidden outside edit mode, so they're inert until then
+  }
+
+  // Drag to reorder the hero list-stats (edit mode). Uses pointer events so it works with both
+  // mouse and touch; only the grip handle starts a drag (touch-action:none on it), so the rest
+  // of the block still scrolls normally. Blocks reorder live as the pointer crosses midpoints,
+  // and the new order persists to CONTENT.site via persist() — same path as every other edit.
+  function makeListsSortable(col) {
+    col.querySelectorAll('.list-drag-handle').forEach((handle) => {
+      const item = handle.closest('.stat--list');
+      handle.addEventListener('pointerdown', (e) => {
+        if (!document.body.classList.contains('edit-mode')) return; // only draggable in edit mode
+        e.preventDefault();
+        const startY = e.clientY;
+        let moved = false;
+        item.classList.add('dragging');
+        // Track on document (not the handle) so the drag keeps working as the block moves out
+        // from under the pointer — more reliable than pointer capture.
+        const onMove = (ev) => {
+          if (Math.abs(ev.clientY - startY) > 4) moved = true;
+          const others = [...col.querySelectorAll('.stat--list')].filter((s) => s !== item);
+          const before = others.find((s) => { const r = s.getBoundingClientRect(); return ev.clientY < r.top + r.height / 2; });
+          if (before) col.insertBefore(item, before); else col.appendChild(item);
+        };
+        const onUp = async () => {
+          document.removeEventListener('pointermove', onMove);
+          document.removeEventListener('pointerup', onUp);
+          document.removeEventListener('pointercancel', onUp);
+          item.classList.remove('dragging');
+          if (!moved) return;
+          const order = [...col.querySelectorAll('.stat--list')].map((s) => +s.dataset.listIdx);
+          const site = getSite();
+          site.lists = order.map((i) => site.lists[i]);
+          CONTENT.site = site;
+          await persist('Reorder hero lists');
+        };
+        document.addEventListener('pointermove', onMove);
+        document.addEventListener('pointerup', onUp);
+        document.addEventListener('pointercancel', onUp);
+      });
+    });
   }
 
   // ---------- Conductor (gentle auto-rotate) ----------
@@ -262,7 +304,6 @@
     syncVideo();
     const setPos = (n) => { items[pos].classList.remove('active'); if (dotEls[pos]) dotEls[pos].classList.remove('active'); pos = (n + items.length) % items.length; items[pos].classList.add('active'); if (dotEls[pos]) dotEls[pos].classList.add('active'); syncVideo(); };
     if (multi) {
-      card.classList.add('is-carousel');
       const ctrl = { paused: false, skip: 0, inView: false, advance: () => setPos(pos + 1) };
       carousels.push(ctrl);
       observeCarousel(frame, ctrl);
@@ -891,6 +932,13 @@
     });
   }
 
+  // ---------- Back-to-top ----------
+  function initBackToTop() {
+    const btn = document.getElementById('to-top');
+    if (!btn) return;
+    btn.addEventListener('click', () => { reduceMotion ? window.scrollTo(0, 0) : smoothScrollTo(0, 620); });
+  }
+
   // ---------- Init ----------
   (async () => {
     await loadData();
@@ -898,6 +946,7 @@
     initScrollSpy();
     initBgShift();
     initSmoothNav();
+    initBackToTop();
     const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
   })();
 })();

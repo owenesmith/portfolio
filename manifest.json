@@ -485,10 +485,10 @@
       "color": null,
       "section": "digital",
       "inProgress": false,
+      "frame": "browser",
       "photos": [
         "img/Vision-Board.jpeg"
-      ],
-      "frame": "browser"
+      ]
     }
   ]
 }
