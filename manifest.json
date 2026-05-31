@@ -463,7 +463,8 @@
       "inProgress": false,
       "photos": [
         "img/Crystal-anamorphic-sculptor.jpeg"
-      ]
+      ],
+      "frame": "browser"
     }
   ]
 }

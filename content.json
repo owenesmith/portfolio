@@ -136,7 +136,9 @@
       "frame": "browser"
     },
     "crystal-anamorphic-sculptor": {
-      "section": "digital"
+      "title": "Crystal anamorphic sculptor",
+      "section": "digital",
+      "frame": "browser"
     }
   },
   "order": {
