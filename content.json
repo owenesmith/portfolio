@@ -117,6 +117,11 @@
       "title": "Portfolio",
       "section": "digital",
       "frame": "browser"
+    },
+    "img-0367": {
+      "title": "Weather Display",
+      "desc": "480x480 TFT in 3D printed housing",
+      "section": "physical"
     }
   },
   "order": {
