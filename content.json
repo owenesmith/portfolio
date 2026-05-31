@@ -148,6 +148,8 @@
       "frame": "browser"
     },
     "marble-track-generator": {
+      "title": "Marble Track Generator",
+      "desc": "Generates 3d printable marble track based on base plate shape, designed for use with robotic arm to reset marbles.",
       "section": "digital",
       "frame": "browser"
     },
