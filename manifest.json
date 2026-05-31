@@ -377,6 +377,20 @@
       ]
     },
     {
+      "id": "clarity1",
+      "title": "Clarity",
+      "desc": "Student Success Platform",
+      "color": null,
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser",
+      "photos": [
+        "img/Clarity1.png",
+        "img/Clarity1-2.jpeg",
+        "img/Clarity1-3.jpeg"
+      ]
+    },
+    {
       "id": "kumiko-generator",
       "title": "Kumiko Woodworking Pattern Generator",
       "desc": "",
@@ -399,20 +413,6 @@
         "img/ROS.jpeg"
       ],
       "frame": "browser"
-    },
-    {
-      "id": "clarity1",
-      "title": "Clarity",
-      "desc": "Student Success Platform",
-      "color": null,
-      "section": "digital",
-      "inProgress": true,
-      "frame": "browser",
-      "photos": [
-        "img/Clarity1.png",
-        "img/Clarity1-2.jpeg",
-        "img/Clarity1-3.jpeg"
-      ]
     },
     {
       "id": "inkpress1",
