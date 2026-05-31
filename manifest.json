@@ -465,6 +465,17 @@
         "img/OrbitFrame1.png",
         "img/OrbitFrame1-2.jpeg"
       ]
+    },
+    {
+      "id": "linegen",
+      "title": "LineGen",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "photos": [
+        "img/LineGen.jpeg"
+      ]
     }
   ]
 }
