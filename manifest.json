@@ -470,7 +470,7 @@
       "link": "",
       "color": null,
       "section": "digital",
-      "inProgress": true,
+      "inProgress": false,
       "frame": "browser",
       "photos": [
         "img/Kumiko-Generator.png"
