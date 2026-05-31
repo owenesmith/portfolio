@@ -324,6 +324,17 @@
       "photos": [
         "img/Garden-Sign.jpeg"
       ]
+    },
+    {
+      "id": "img-0367",
+      "title": "IMG_0367",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/IMG_0367.jpeg"
+      ]
     }
   ],
   "digital": [
