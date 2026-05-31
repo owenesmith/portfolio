@@ -134,7 +134,7 @@ try { regenerate(); } catch (e) { console.error('Initial generate failed:', e.me
 let watchTimer = null;
 try {
   fs.watch(IMG, (evt, file) => {
-    if (file && (file.startsWith('.') || file.endsWith('.opt.jpeg'))) return;
+    if (file && (file.startsWith('.') || /\.opt\.[^.]+$/.test(file))) return;
     clearTimeout(watchTimer);
     watchTimer = setTimeout(() => { try { regenerate(); console.log('img/ changed → manifest regenerated'); } catch (e) { console.error('regen error:', e.message); } }, 400);
   });

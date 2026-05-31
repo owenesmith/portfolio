@@ -311,7 +311,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 1.5rem 2rem 5rem; }
    transparent crop floats by its real silhouette; a solid-bg image just casts a soft panel. */
 .frame--phone-image { width: max-content; max-width: 100%; margin-inline: auto; }
 .frame--phone-image .mockup--device {
-  position: relative; height: var(--phone-h); aspect-ratio: 313 / 609; /* OrbitFrame render ratio */
+  position: relative; height: var(--phone-h); aspect-ratio: 547 / 1158; /* OrbitFrame phone silhouette ratio (transparent crop) */
   max-width: 100%;
   transition: transform 0.5s var(--ease);
 }

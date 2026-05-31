@@ -90,13 +90,21 @@ function normalize() {
       const { w, h } = dims(src);
       const bytes = fs.statSync(src).size;
       if (Math.max(w, h) > OPTIMIZE_IF_EDGE_OVER || bytes > OPTIMIZE_IF_BYTES_OVER) {
-        log(`  optimizing ${f} (${w}x${h}, ${(bytes / 1e6).toFixed(1)}MB)`);
-        backup(src);
         const tmp = src.replace(/(\.[^.]+)$/, '.opt$1');
         execFileSync('magick', [src, '-auto-orient', '-resize', `${MAX_EDGE}x${MAX_EDGE}>`,
           '-strip', '-interlace', 'JPEG', '-quality', '82', tmp]);
-        fs.renameSync(tmp, src);
-        changed++;
+        // Only adopt the result if it actually shrank. A file already as small as
+        // it'll get (e.g. a tight PNG just over the byte limit) would otherwise be
+        // rewritten on every run — which retriggers studio's img/ watcher in an
+        // endless optimize → regenerate → optimize loop.
+        if (fs.statSync(tmp).size < bytes) {
+          log(`  optimizing ${f} (${w}x${h}, ${(bytes / 1e6).toFixed(1)}MB)`);
+          backup(src);
+          fs.renameSync(tmp, src);
+          changed++;
+        } else {
+          fs.rmSync(tmp);
+        }
       }
     }
   }

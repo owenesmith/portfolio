@@ -283,10 +283,10 @@
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/IMG_0367.jpeg"
-      ],
-      "frame": "none"
+      ]
     },
     {
       "id": "cookbook-holder",
@@ -371,10 +371,10 @@
       "color": null,
       "section": "digital",
       "inProgress": false,
+      "frame": "browser",
       "photos": [
         "img/ROS.jpeg"
-      ],
-      "frame": "browser"
+      ]
     },
     {
       "id": "portfolio2",
@@ -409,10 +409,10 @@
       "color": null,
       "section": "digital",
       "inProgress": false,
+      "frame": "browser",
       "photos": [
         "img/Crystal-anamorphic-sculptor.jpeg"
-      ],
-      "frame": "browser"
+      ]
     },
     {
       "id": "inkpress1",
@@ -462,8 +462,8 @@
       "inProgress": false,
       "frame": "phone-image",
       "photos": [
-        "img/OrbitFrame1.png",
-        "img/OrbitFrame1-2.jpeg"
+        "img/OrbitFrame1-3.png",
+        "img/OrbitFrame1-4.png"
       ]
     },
     {
@@ -473,10 +473,10 @@
       "color": null,
       "section": "digital",
       "inProgress": false,
+      "frame": "browser",
       "photos": [
         "img/LineGen.jpeg"
-      ],
-      "frame": "browser"
+      ]
     }
   ]
 }
