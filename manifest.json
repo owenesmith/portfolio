@@ -299,19 +299,6 @@
       ]
     },
     {
-      "id": "img-0367",
-      "title": "Weather Display",
-      "desc": "480x480 TFT in 3D printed housing, custom WiFi program.",
-      "link": "",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "frame": "none",
-      "photos": [
-        "img/IMG_0367.jpeg"
-      ]
-    },
-    {
       "id": "cookbook-holder",
       "title": "Cookbook Holder",
       "desc": "",
@@ -361,6 +348,19 @@
       "frame": "none",
       "photos": [
         "img/Garden-Sign.jpeg"
+      ]
+    },
+    {
+      "id": "img-0367",
+      "title": "Weather Display",
+      "desc": "480x480 TFT in 3D printed housing, custom WiFi program.",
+      "link": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/IMG_0367.jpeg"
       ]
     }
   ],
