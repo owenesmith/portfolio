@@ -365,6 +365,18 @@
       ]
     },
     {
+      "id": "ros",
+      "title": "4 Axis + Gripper Robotic Arm Operating System",
+      "desc": "Designed for the BCN3D Moveo Arm",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "photos": [
+        "img/ROS.jpeg"
+      ],
+      "frame": "browser"
+    },
+    {
       "id": "portfolio2",
       "title": "Portfolio",
       "desc": "",
@@ -389,18 +401,6 @@
         "img/Clarity1-2.jpeg",
         "img/Clarity1-3.jpeg"
       ]
-    },
-    {
-      "id": "ros",
-      "title": "4 Axis + Gripper Robotic Arm Operating System",
-      "desc": "Designed for the BCN3D Moveo Arm",
-      "color": null,
-      "section": "digital",
-      "inProgress": false,
-      "photos": [
-        "img/ROS.jpeg"
-      ],
-      "frame": "browser"
     },
     {
       "id": "crystal-anamorphic-sculptor",
