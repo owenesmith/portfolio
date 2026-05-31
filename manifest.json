@@ -217,6 +217,18 @@
       ]
     },
     {
+      "id": "img-0367",
+      "title": "Weather Display",
+      "desc": "480x480 TFT in 3D printed housing",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/IMG_0367.jpeg"
+      ],
+      "frame": "none"
+    },
+    {
       "id": "paper-towel-roll-holder",
       "title": "Paper Towel Roll Holder",
       "desc": "",
@@ -288,18 +300,6 @@
       "photos": [
         "img/Cookbook-Holder.jpeg"
       ]
-    },
-    {
-      "id": "img-0367",
-      "title": "Weather Display",
-      "desc": "480x480 TFT in 3D printed housing",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "photos": [
-        "img/IMG_0367.jpeg"
-      ],
-      "frame": "none"
     },
     {
       "id": "wood-ring",
