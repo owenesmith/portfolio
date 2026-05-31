@@ -162,6 +162,7 @@
     "portfolio2": {
       "title": "Portfolio",
       "desc": "Custom Portfolio Site.",
+      "link": "https://owenesmith.com/",
       "section": "digital",
       "frame": "browser"
     },
