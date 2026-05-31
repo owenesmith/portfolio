@@ -383,7 +383,7 @@
     {
       "id": "pierscope-companion-viewer",
       "title": "PierScope Companion Viewer",
-      "desc": "",
+      "desc": "Website for viewing data collected from PierScope app.",
       "link": "",
       "color": null,
       "section": "digital",

@@ -123,6 +123,7 @@
     },
     "pierscope-companion-viewer": {
       "title": "PierScope Companion Viewer",
+      "desc": "Website for viewing data collected from PierScope app.",
       "section": "digital",
       "inProgress": true,
       "frame": "browser"
