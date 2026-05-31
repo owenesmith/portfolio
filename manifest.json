@@ -398,7 +398,8 @@
       "inProgress": false,
       "photos": [
         "img/ROS.jpeg"
-      ]
+      ],
+      "frame": "browser"
     },
     {
       "id": "clarity1",
