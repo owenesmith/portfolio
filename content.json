@@ -129,6 +129,9 @@
       "desc": "Designed for the BCN3D Moveo Arm",
       "section": "digital",
       "frame": "browser"
+    },
+    "screenshot-2026-05-31-at-82842am": {
+      "section": "digital"
     }
   },
   "order": {
@@ -170,7 +173,8 @@
       "kumiko-generator",
       "inkpress1",
       "marble-track-generator",
-      "orbitframe1"
+      "orbitframe1",
+      "screenshot-2026-05-31-at-82842am"
     ]
   }
 }
