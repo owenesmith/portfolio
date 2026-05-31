@@ -505,8 +505,8 @@
     },
     {
       "id": "linegen",
-      "title": "Procedural Line Art Generator for Ink Press Printing",
-      "desc": "",
+      "title": "LineGen",
+      "desc": "Procedural Line Art Generator for Ink Press Printing, creates design from parameters and makes print plate files for laser engraver.",
       "link": "",
       "color": null,
       "section": "digital",
