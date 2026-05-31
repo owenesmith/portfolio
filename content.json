@@ -1,4 +1,46 @@
 {
+  "site": {
+    "subtitle": "A collection of some of my favorite builds, designed and built by me.",
+    "lists": [
+      {
+        "title": "Materials",
+        "items": [
+          "Walnut",
+          "Maple",
+          "Purpleheart",
+          "Padauk",
+          "Oak",
+          "Steel",
+          "Slate",
+          "Cork",
+          "Glass",
+          "Veneer",
+          "Brass"
+        ]
+      },
+      {
+        "title": "Electronics",
+        "items": [
+          "Arduino",
+          "ESP32",
+          "Stepper Motors",
+          "LED Lighting",
+          "Bluetooth LE",
+          "TFT Displays"
+        ]
+      },
+      {
+        "title": "Languages",
+        "items": [
+          "Python",
+          "JavaScript",
+          "C++",
+          "Swift",
+          "HTML / CSS"
+        ]
+      }
+    ]
+  },
   "items": {
     "kumiko-style-lamp": {
       "title": "Kumiko Style Lamp",

@@ -130,17 +130,77 @@
   const knownIds = () => new Set([...(CONTENT.order?.physical || []), ...(CONTENT.order?.digital || [])]);
   const canEdit = () => API_OK || GH.connected();
 
-  // ---------- Hero stats ----------
+  // ---------- Hero stats + editable subtitle / list-stats ----------
+  const DEFAULT_SUBTITLE = "A collection of some of my favorite builds, designed and built by me.";
+  // Seeded defaults used until content.json's `site` block overrides them. Electronics &
+  // Languages are starter values — edit them in edit mode (✎ beside each section).
+  function defaultSite() {
+    return {
+      subtitle: DEFAULT_SUBTITLE,
+      lists: [
+        { title: "Materials", items: MATERIALS.slice() },
+        { title: "Electronics", items: ["Arduino", "ESP32", "Stepper Motors", "LED Lighting", "Bluetooth LE", "TFT Displays"] },
+        { title: "Languages", items: ["Python", "JavaScript", "C++", "Swift", "HTML / CSS"] },
+      ],
+    };
+  }
+  function getSite() {
+    const d = defaultSite();
+    const s = (CONTENT && CONTENT.site && typeof CONTENT.site === 'object') ? CONTENT.site : {};
+    const lists = (Array.isArray(s.lists) && s.lists.length)
+      ? s.lists.map((l) => ({ title: String((l && l.title) || ''), items: Array.isArray(l && l.items) ? l.items.map(String) : [] }))
+      : d.lists;
+    return { subtitle: typeof s.subtitle === 'string' ? s.subtitle : d.subtitle, lists };
+  }
   function renderStats() {
-    const n = MANIFEST.physical.length + MANIFEST.digital.length;
     const elBuilds = document.getElementById('stat-builds');
-    const elMat = document.getElementById('stat-materials');
-    if (elBuilds) elBuilds.textContent = n;
-    if (elMat) elMat.textContent = MATERIALS.join('  ·  ');
+    if (elBuilds) elBuilds.textContent = MANIFEST.physical.length + MANIFEST.digital.length;
+    renderSiteText();
+  }
+  // Subtitle + the dot-separated list-stats (Materials / Electronics / Languages).
+  // The lists render here (rather than living in the HTML) so the same nodes can be
+  // rebuilt after an edit. Items are always joined with the standard " · " separator.
+  function renderSiteText() {
+    const site = getSite();
+    const sub = document.getElementById('site-sub');
+    if (sub) sub.textContent = site.subtitle;
+    const stats = document.querySelector('.stats');
+    if (!stats) return;
+    const existing = stats.querySelector('.stat-lists');
+    if (existing) existing.remove();
+    const col = document.createElement('div');
+    col.className = 'stat-lists';
+    site.lists.forEach((list, idx) => {
+      const el = document.createElement('div');
+      el.className = 'stat stat--list';
+      el.innerHTML = `<span class="stat-num">${list.items.map(esc).join('  ·  ')}</span>`
+        + `<span class="stat-label">${esc(list.title)}</span>`
+        + `<button class="hero-edit" type="button" aria-label="Edit ${esc(list.title)} list">✎</button>`;
+      el.querySelector('.hero-edit').addEventListener('click', () => openListEditor(idx));
+      col.appendChild(el);
+    });
+    stats.appendChild(col);
   }
 
   // ---------- Conductor (gentle auto-rotate) ----------
-  function runWave() { carousels.forEach((c, i) => setTimeout(() => { if (c.paused || document.hidden) return; if (c.skip > 0) { c.skip--; return; } c.advance(); }, i * STAGGER_MS)); }
+  // A carousel auto-advances only while it is actually on screen: an IntersectionObserver
+  // flips ctrl.inView, and each wave skips anything off-screen, hovered, or in a hidden tab.
+  // This is what makes it work on mobile — there's no hover there to drive pausing, so
+  // viewport visibility is the gate (on desktop too).
+  let carouselIO = null;
+  function ensureCarouselIO() {
+    if (carouselIO || !('IntersectionObserver' in window)) return;
+    carouselIO = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { const c = en.target._carousel; if (c) c.inView = en.isIntersecting; });
+    }, { threshold: 0.25 });
+  }
+  function observeCarousel(frame, ctrl) {
+    if (!('IntersectionObserver' in window)) { ctrl.inView = true; return; } // no IO support → always eligible
+    ensureCarouselIO();
+    frame._carousel = ctrl;
+    carouselIO.observe(frame);
+  }
+  function runWave() { carousels.forEach((c, i) => setTimeout(() => { if (!c.inView || c.paused || document.hidden) return; if (c.skip > 0) { c.skip--; return; } c.advance(); }, i * STAGGER_MS)); }
   function startConductor() { stopConductor(); if (editMode || reduceMotion || !carousels.length) return; conductorTimer = setInterval(runWave, CYCLE_MS); }
   function stopConductor() { if (conductorTimer) { clearInterval(conductorTimer); conductorTimer = null; } }
   document.addEventListener('visibilitychange', () => { document.hidden ? stopConductor() : startConductor(); });
@@ -197,20 +257,40 @@
     const frame = card.querySelector('.frame');
     const items = frame.querySelectorAll('.media');
     const dotEls = frame.querySelectorAll('.dot');
-    let pos = 0;
+    let pos = 0, suppressTap = false;
     const syncVideo = () => items.forEach((el, idx) => { if (el.tagName === 'VIDEO') { idx === pos ? el.play().catch(() => {}) : (el.pause(), el.currentTime = 0); } });
     syncVideo();
     const setPos = (n) => { items[pos].classList.remove('active'); if (dotEls[pos]) dotEls[pos].classList.remove('active'); pos = (n + items.length) % items.length; items[pos].classList.add('active'); if (dotEls[pos]) dotEls[pos].classList.add('active'); syncVideo(); };
     if (multi) {
-      const ctrl = { paused: false, skip: 0, advance: () => setPos(pos + 1) };
+      card.classList.add('is-carousel');
+      const ctrl = { paused: false, skip: 0, inView: false, advance: () => setPos(pos + 1) };
       carousels.push(ctrl);
+      observeCarousel(frame, ctrl);
       card.addEventListener('mouseenter', () => { ctrl.paused = true; });
       card.addEventListener('mouseleave', () => { ctrl.paused = false; });
       frame.querySelector('.prev').addEventListener('click', (e) => { e.stopPropagation(); setPos(pos - 1); ctrl.skip = SKIP_CYCLES; });
       frame.querySelector('.next').addEventListener('click', (e) => { e.stopPropagation(); setPos(pos + 1); ctrl.skip = SKIP_CYCLES; });
+      // Touch swipe: a horizontal drag flips photos; vertical drags stay free for page scroll
+      // (passive listeners). A drag also suppresses the tap so it doesn't open the lightbox.
+      let sx = 0, sy = 0, dx = 0, dy = 0, tracking = false;
+      frame.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) { tracking = false; return; }
+        sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; dy = 0; tracking = true;
+      }, { passive: true });
+      frame.addEventListener('touchmove', (e) => {
+        if (!tracking) return;
+        dx = e.touches[0].clientX - sx; dy = e.touches[0].clientY - sy;
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) suppressTap = true;
+      }, { passive: true });
+      frame.addEventListener('touchend', () => {
+        if (!tracking) return; tracking = false;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          setPos(pos + (dx < 0 ? 1 : -1)); ctrl.skip = SKIP_CYCLES; suppressTap = true;
+        }
+      }, { passive: true });
     }
-    // open lightbox (not while editing)
-    const open = (e) => { if (editMode) return; openLightbox(p, pos); };
+    // open lightbox (not while editing, and not as the tail of a swipe)
+    const open = () => { const blocked = editMode || suppressTap; suppressTap = false; if (blocked) return; openLightbox(p, pos); };
     frame.addEventListener('click', open);
     frame.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     if (p.desc) {
@@ -236,6 +316,7 @@
   }
   function render() {
     carousels = [];
+    if (carouselIO) carouselIO.disconnect();
     const known = knownIds();
     gridP.innerHTML = '';
     MANIFEST.physical.forEach((p, i) => gridP.appendChild(buildCard(p, i, 'physical', editMode && canEdit() && !known.has(p.id))));
@@ -332,6 +413,15 @@
     else if (e.key === 'ArrowLeft') lbShow(lbPos - 1);
     else if (e.key === 'ArrowRight') lbShow(lbPos + 1);
   });
+  // Swipe the open lightbox on touch — mirrors the ‹ › buttons and arrow keys.
+  (function lbSwipe() {
+    const wrap = document.querySelector('.lb-media-wrap');
+    if (!wrap) return;
+    let sx = 0, sy = 0, dx = 0, dy = 0, on = false;
+    wrap.addEventListener('touchstart', (e) => { if (e.touches.length !== 1) { on = false; return; } sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; dy = 0; on = true; }, { passive: true });
+    wrap.addEventListener('touchmove', (e) => { if (!on) return; dx = e.touches[0].clientX - sx; dy = e.touches[0].clientY - sy; }, { passive: true });
+    wrap.addEventListener('touchend', () => { if (!on) return; on = false; if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) lbShow(lbPos + (dx < 0 ? 1 : -1)); }, { passive: true });
+  })();
 
   // ---------- Persistence ----------
   async function persist(message, extraFiles = []) {
@@ -417,6 +507,67 @@
     CONTENT.order[other] = (CONTENT.order[other] || []).filter(x => x !== id);
     CONTENT.order[section] = CONTENT.order[section] || [];
     if (!CONTENT.order[section].includes(id)) CONTENT.order[section].push(id);
+  }
+
+  // ---------- Hero text editor (subtitle + list-stats) ----------
+  // Hooks into the SAME edit mode and persistence as image/card edits: the edited text lives
+  // on CONTENT.site and is saved by persist() (→ /api/content locally, or a content.json commit
+  // on GitHub) — no separate auth or storage. The list editor enforces the standard format:
+  // you edit plain item text and " · " separators are applied on render; anything pasted with
+  // commas/dots/newlines is split into separate items on save.
+  let heroEditorEl = null;
+  function closeHeroEditor() { if (heroEditorEl) { heroEditorEl.remove(); heroEditorEl = null; } }
+  function heroItemRow(val) {
+    return `<div class="ed-item"><input class="ed-item-input" value="${esc(val || '')}" placeholder="Item"><button type="button" class="ed-item-rm" aria-label="Remove item">✕</button></div>`;
+  }
+  function openSubtitleEditor() {
+    if (!canEdit()) { flashMsg('Connect GitHub (top bar) or run the local studio to edit.'); return; }
+    closeHeroEditor();
+    const ed = document.createElement('div'); ed.className = 'editor hero-editor';
+    ed.innerHTML = `
+      <div class="ed-label">Subtitle</div>
+      <textarea class="ed-subtitle" rows="2">${esc(getSite().subtitle)}</textarea>
+      <div class="ed-row"><button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button></div>`;
+    document.querySelector('.hero-inner').appendChild(ed); heroEditorEl = ed;
+    ed.querySelector('.ed-subtitle').focus();
+    ed.querySelector('.ed-cancel').addEventListener('click', closeHeroEditor);
+    ed.querySelector('.ed-save').addEventListener('click', async () => {
+      const v = ed.querySelector('.ed-subtitle').value.trim();
+      const site = getSite(); site.subtitle = v || DEFAULT_SUBTITLE;
+      CONTENT.site = site; closeHeroEditor();
+      await persist('Edit subtitle');
+    });
+  }
+  function openListEditor(idx) {
+    if (!canEdit()) { flashMsg('Connect GitHub (top bar) or run the local studio to edit.'); return; }
+    closeHeroEditor();
+    const site = getSite(); const list = site.lists[idx] || { title: '', items: [] };
+    const ed = document.createElement('div'); ed.className = 'editor hero-editor';
+    ed.innerHTML = `
+      <input class="ed-list-title" value="${esc(list.title)}" placeholder="Section title">
+      <div class="ed-label">Items <span class="ed-hint">dots are added automatically — just edit the text</span></div>
+      <div class="ed-list-items">${list.items.map(heroItemRow).join('')}</div>
+      <button class="ed-add-item" type="button">+ Item</button>
+      <div class="ed-row"><button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button></div>`;
+    document.querySelector('.hero-inner').appendChild(ed); heroEditorEl = ed;
+    const itemsWrap = ed.querySelector('.ed-list-items');
+    const wireRm = (btn) => btn.addEventListener('click', () => btn.closest('.ed-item').remove());
+    itemsWrap.querySelectorAll('.ed-item-rm').forEach(wireRm);
+    ed.querySelector('.ed-add-item').addEventListener('click', () => {
+      const tmp = document.createElement('div'); tmp.innerHTML = heroItemRow('');
+      const row = tmp.firstElementChild; itemsWrap.appendChild(row);
+      wireRm(row.querySelector('.ed-item-rm')); row.querySelector('.ed-item-input').focus();
+    });
+    ed.querySelector('.ed-cancel').addEventListener('click', closeHeroEditor);
+    ed.querySelector('.ed-save').addEventListener('click', async () => {
+      const title = ed.querySelector('.ed-list-title').value.trim() || list.title || 'Section';
+      const items = [...ed.querySelectorAll('.ed-item-input')]
+        .flatMap((i) => i.value.split(/[,\n·]+/))
+        .map((s) => s.trim()).filter(Boolean);
+      site.lists[idx] = { title, items };
+      CONTENT.site = site; closeHeroEditor();
+      await persist('Edit ' + title + ' list');
+    });
   }
 
   // ---------- Drag to reorder ----------
@@ -616,8 +767,9 @@
                 : 'Connect GitHub to edit the live site (drag/✎/drop), or run node studio.mjs locally.');
   }
   function enterEditMode() { editMode = true; document.body.classList.add('edit-mode'); editBar.hidden = false; loginBtn.hidden = true; chrome(); render(); }
-  function exitEditMode() { editMode = false; document.body.classList.remove('edit-mode'); editBar.hidden = true; loginBtn.hidden = false; if (openEditorEl) { openEditorEl.remove(); openEditorEl = null; } render(); }
+  function exitEditMode() { editMode = false; document.body.classList.remove('edit-mode'); editBar.hidden = true; loginBtn.hidden = false; if (openEditorEl) { openEditorEl.remove(); openEditorEl = null; } closeHeroEditor(); render(); }
   document.getElementById('logout-btn').addEventListener('click', exitEditMode);
+  { const editSub = document.getElementById('edit-sub'); if (editSub) editSub.addEventListener('click', openSubtitleEditor); }
   document.getElementById('reset-order').addEventListener('click', () => { localStorage.removeItem(ORDER_KEY); loadData().then(render); flashMsg('Reset to default order.'); });
   document.getElementById('copy-order').addEventListener('click', async () => { const t = MANIFEST.physical.map((p, i) => `${i + 1}. ${p.title}`).join('\n'); try { await navigator.clipboard.writeText(t); flashMsg('Order copied.'); } catch (e) { window.prompt('Order:', MANIFEST.physical.map(p => p.title).join(' | ')); } });
   document.getElementById('publish-btn').addEventListener('click', async () => {
@@ -701,12 +853,51 @@
     measure(); // correct on load (incl. deep-link straight to #digital)
   }
 
+  // ---------- Smooth section-nav scrolling ----------
+  // Animated in JS rather than via CSS scroll-behavior:smooth, because iOS Safari doesn't
+  // reliably animate native fragment jumps (they snap). A short easeOutCubic glide feels fast
+  // and identical on every platform; window.scrollTo runs per-frame (CSS smooth is now `auto`),
+  // and each step fires a scroll event so the Physical→Digital background shift tracks along.
+  function curY() { return window.pageYOffset || document.documentElement.scrollTop || 0; }
+  function smoothScrollTo(toY, duration) {
+    const startY = curY();
+    const max = Math.max(0, (document.documentElement.scrollHeight || 0) - window.innerHeight);
+    const dest = Math.min(Math.max(0, toY), max);
+    const dist = dest - startY;
+    if (Math.abs(dist) < 2) { window.scrollTo(0, dest); return; }
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // quick start, soft settle
+    let start = null;
+    function step(ts) {
+      if (start == null) start = ts;
+      const t = Math.min(1, (ts - start) / duration);
+      window.scrollTo(0, startY + dist * ease(t));
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function initSmoothNav() {
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href').slice(1);
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        const top = Math.max(0, target.getBoundingClientRect().top + curY() - 16); // ~scroll-margin
+        if (reduceMotion) { window.scrollTo(0, top); }
+        else { smoothScrollTo(top, Math.min(680, Math.max(360, Math.abs(top - curY()) * 0.32))); }
+        history.replaceState(null, '', '#' + id);
+      });
+    });
+  }
+
   // ---------- Init ----------
   (async () => {
     await loadData();
     render();
     initScrollSpy();
     initBgShift();
+    initSmoothNav();
     const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
   })();
 })();
