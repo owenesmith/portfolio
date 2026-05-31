@@ -403,6 +403,18 @@
       "frame": "browser"
     },
     {
+      "id": "crystal-anamorphic-sculptor",
+      "title": "Crystal anamorphic sculptor",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "photos": [
+        "img/Crystal-anamorphic-sculptor.jpeg"
+      ],
+      "frame": "browser"
+    },
+    {
       "id": "inkpress1",
       "title": "Inkpress",
       "desc": "",
@@ -453,18 +465,6 @@
         "img/OrbitFrame1.png",
         "img/OrbitFrame1-2.jpeg"
       ]
-    },
-    {
-      "id": "crystal-anamorphic-sculptor",
-      "title": "Crystal anamorphic sculptor",
-      "desc": "",
-      "color": null,
-      "section": "digital",
-      "inProgress": false,
-      "photos": [
-        "img/Crystal-anamorphic-sculptor.jpeg"
-      ],
-      "frame": "browser"
     }
   ]
 }
