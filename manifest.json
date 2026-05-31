@@ -442,6 +442,17 @@
         "img/OrbitFrame1.png",
         "img/OrbitFrame1-2.jpeg"
       ]
+    },
+    {
+      "id": "ros",
+      "title": "ROS",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "photos": [
+        "img/ROS.jpeg"
+      ]
     }
   ]
 }

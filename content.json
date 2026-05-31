@@ -122,6 +122,9 @@
       "title": "Weather Display",
       "desc": "480x480 TFT in 3D printed housing",
       "section": "physical"
+    },
+    "ros": {
+      "section": "digital"
     }
   },
   "order": {
@@ -162,7 +165,8 @@
       "clarity1",
       "inkpress1",
       "marble-track-generator",
-      "orbitframe1"
+      "orbitframe1",
+      "ros"
     ]
   }
 }
