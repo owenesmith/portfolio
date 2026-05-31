@@ -17,6 +17,9 @@
   const ZOOM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>';
   // tiny padlock for the browser mockup's address bar
   const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  // standard drag-handle grip (6 dots) — an SVG, so it renders identically everywhere (the
+  // braille-dots glyph used before could show as tofu on some devices)
+  const GRIP_SVG = '<svg class="grip" viewBox="0 0 10 16" aria-hidden="true"><circle cx="3" cy="3" r="1.3"/><circle cx="7" cy="3" r="1.3"/><circle cx="3" cy="8" r="1.3"/><circle cx="7" cy="8" r="1.3"/><circle cx="3" cy="13" r="1.3"/><circle cx="7" cy="13" r="1.3"/></svg>';
   // plausible URLs shown in browser mockups (display-only); falls back to a slug host
   const BROWSER_URLS = {
     "pierscope-companion-viewer": "pierscope.app/viewer",
@@ -195,53 +198,55 @@
       el.className = 'stat stat--list';
       el.dataset.listIdx = idx;
       el.innerHTML = `<span class="stat-num">${list.items.map(esc).join('  ·  ')}</span>`
-        + `<span class="stat-label"><button class="list-drag-handle" type="button" aria-label="Drag to reorder ${esc(list.title)}" title="Drag to reorder">⠿</button>${esc(list.title)}</span>`
+        + `<span class="stat-label"><button class="list-drag-handle" type="button" aria-label="Drag to reorder ${esc(list.title)}" title="Drag to reorder">${GRIP_SVG}</button>${esc(list.title)}</span>`
         + `<button class="hero-edit" type="button" aria-label="Edit ${esc(list.title)} list">✎</button>`;
       el.querySelector('.hero-edit').addEventListener('click', () => openListEditor(idx));
       col.appendChild(el);
     });
     stats.appendChild(col);
-    makeListsSortable(col); // handles are CSS-hidden outside edit mode, so they're inert until then
+    // reorder the whole lists (handles are CSS-hidden outside edit mode, so they're inert until then)
+    makeSortable(col, '.list-drag-handle', '.stat--list', async () => {
+      const order = [...col.querySelectorAll('.stat--list')].map((s) => +s.dataset.listIdx);
+      const site = getSite();
+      site.lists = order.map((i) => site.lists[i]);
+      CONTENT.site = site;
+      await persist('Reorder hero lists');
+    });
   }
 
-  // Drag to reorder the hero list-stats (edit mode). Uses pointer events so it works with both
-  // mouse and touch; only the grip handle starts a drag (touch-action:none on it), so the rest
-  // of the block still scrolls normally. Blocks reorder live as the pointer crosses midpoints,
-  // and the new order persists to CONTENT.site via persist() — same path as every other edit.
-  function makeListsSortable(col) {
-    col.querySelectorAll('.list-drag-handle').forEach((handle) => {
-      const item = handle.closest('.stat--list');
-      handle.addEventListener('pointerdown', (e) => {
-        if (!document.body.classList.contains('edit-mode')) return; // only draggable in edit mode
-        e.preventDefault();
-        const startY = e.clientY;
-        let moved = false;
-        item.classList.add('dragging');
-        // Track on document (not the handle) so the drag keeps working as the block moves out
-        // from under the pointer — more reliable than pointer capture.
-        const onMove = (ev) => {
-          if (Math.abs(ev.clientY - startY) > 4) moved = true;
-          const others = [...col.querySelectorAll('.stat--list')].filter((s) => s !== item);
-          const before = others.find((s) => { const r = s.getBoundingClientRect(); return ev.clientY < r.top + r.height / 2; });
-          if (before) col.insertBefore(item, before); else col.appendChild(item);
-        };
-        const onUp = async () => {
-          document.removeEventListener('pointermove', onMove);
-          document.removeEventListener('pointerup', onUp);
-          document.removeEventListener('pointercancel', onUp);
-          item.classList.remove('dragging');
-          if (!moved) return;
-          const order = [...col.querySelectorAll('.stat--list')].map((s) => +s.dataset.listIdx);
-          const site = getSite();
-          site.lists = order.map((i) => site.lists[i]);
-          CONTENT.site = site;
-          await persist('Reorder hero lists');
-        };
-        document.addEventListener('pointermove', onMove);
-        document.addEventListener('pointerup', onUp);
-        document.addEventListener('pointercancel', onUp);
-      });
+  // Generic drag-to-reorder via a grip handle — reused for the hero lists AND the items inside
+  // a list editor. Pointer events (mouse + touch); the handle carries touch-action:none so it
+  // drives the drag rather than a scroll. Rows reorder live as the pointer crosses midpoints.
+  // Move/up are tracked on document so the drag keeps working as the row slides out from under
+  // the pointer (more reliable than pointer capture). onDrop (optional) runs after a real move.
+  function wireDragHandle(handle, container, itemSel, onDrop) {
+    const item = handle.closest(itemSel);
+    if (!item) return;
+    handle.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const startY = e.clientY;
+      let moved = false;
+      item.classList.add('dragging');
+      const onMove = (ev) => {
+        if (Math.abs(ev.clientY - startY) > 4) moved = true;
+        const others = [...container.querySelectorAll(itemSel)].filter((s) => s !== item);
+        const before = others.find((s) => { const r = s.getBoundingClientRect(); return ev.clientY < r.top + r.height / 2; });
+        if (before) container.insertBefore(item, before); else container.appendChild(item);
+      };
+      const onUp = async () => {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        document.removeEventListener('pointercancel', onUp);
+        item.classList.remove('dragging');
+        if (moved && onDrop) await onDrop();
+      };
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
     });
+  }
+  function makeSortable(container, handleSel, itemSel, onDrop) {
+    container.querySelectorAll(handleSel).forEach((h) => wireDragHandle(h, container, itemSel, onDrop));
   }
 
   // ---------- Conductor (gentle auto-rotate) ----------
@@ -584,7 +589,7 @@
   let heroEditorEl = null;
   function closeHeroEditor() { if (heroEditorEl) { heroEditorEl.remove(); heroEditorEl = null; } }
   function heroItemRow(val) {
-    return `<div class="ed-item"><input class="ed-item-input" value="${esc(val || '')}" placeholder="Item"><button type="button" class="ed-item-rm" aria-label="Remove item">✕</button></div>`;
+    return `<div class="ed-item"><button type="button" class="ed-item-drag" aria-label="Drag to reorder" title="Drag to reorder">${GRIP_SVG}</button><input class="ed-item-input" value="${esc(val || '')}" placeholder="Item"><button type="button" class="ed-item-rm" aria-label="Remove item">✕</button></div>`;
   }
   function openSubtitleEditor() {
     if (!canEdit()) { flashMsg('Connect GitHub (top bar) or run the local studio to edit.'); return; }
@@ -611,7 +616,7 @@
     const ed = document.createElement('div'); ed.className = 'editor hero-editor';
     ed.innerHTML = `
       <input class="ed-list-title" value="${esc(list.title)}" placeholder="Section title">
-      <div class="ed-label">Items <span class="ed-hint">dots are added automatically — just edit the text</span></div>
+      <div class="ed-label">Items <span class="ed-hint">drag the grip to reorder · dots are added automatically</span></div>
       <div class="ed-list-items">${list.items.map(heroItemRow).join('')}</div>
       <button class="ed-add-item" type="button">+ Item</button>
       <div class="ed-row"><button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button></div>`;
@@ -619,10 +624,14 @@
     const itemsWrap = ed.querySelector('.ed-list-items');
     const wireRm = (btn) => btn.addEventListener('click', () => btn.closest('.ed-item').remove());
     itemsWrap.querySelectorAll('.ed-item-rm').forEach(wireRm);
+    // drag-reorder the item rows; Save reads them in DOM order, so reordering is picked up
+    makeSortable(itemsWrap, '.ed-item-drag', '.ed-item', null);
     ed.querySelector('.ed-add-item').addEventListener('click', () => {
       const tmp = document.createElement('div'); tmp.innerHTML = heroItemRow('');
       const row = tmp.firstElementChild; itemsWrap.appendChild(row);
-      wireRm(row.querySelector('.ed-item-rm')); row.querySelector('.ed-item-input').focus();
+      wireRm(row.querySelector('.ed-item-rm'));
+      wireDragHandle(row.querySelector('.ed-item-drag'), itemsWrap, '.ed-item', null);
+      row.querySelector('.ed-item-input').focus();
     });
     ed.querySelector('.ed-cancel').addEventListener('click', closeHeroEditor);
     ed.querySelector('.ed-save').addEventListener('click', async () => {

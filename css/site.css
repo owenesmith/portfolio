@@ -678,11 +678,14 @@ body:not(.edit-mode) .view-cue { } /* cue shows normally */
 /* a list-stat's pencil tucks into the top-right corner of its block */
 .stat--list .hero-edit { position: absolute; top: 0; right: 0; padding: 0 0.4rem; line-height: 1.5; }
 body:not(.edit-mode) .hero-edit { display: none; }
-/* drag handle for reordering the hero lists (edit mode only) */
+/* SVG grip icon used by every drag handle (pointer-events:none so the click lands on the button) */
+.grip { width: 8px; height: 14px; fill: currentColor; display: block; pointer-events: none; opacity: 0.8; }
+/* drag handle for reordering the whole hero lists (edit mode only) */
 .list-drag-handle {
-  background: none; border: none; padding: 0; margin-right: 0.45rem;
-  color: var(--ink-faint-pg); cursor: grab; font-size: 0.95em; line-height: 1;
-  vertical-align: middle; touch-action: none; /* let the grip drive a drag, not a scroll */
+  background: none; border: none; padding: 0; margin-right: 0.4rem;
+  color: var(--ink-faint-pg); cursor: grab; line-height: 1;
+  display: inline-flex; align-items: center; vertical-align: middle;
+  touch-action: none; /* let the grip drive a drag, not a scroll */
 }
 .list-drag-handle:hover { color: var(--accent); }
 .list-drag-handle:active { cursor: grabbing; }
@@ -693,6 +696,15 @@ body.edit-mode .stat--list { transition: opacity 0.15s var(--ease); }
 .hero-editor .ed-list-title { font-weight: 600; }
 .hero-editor .ed-list-items { display: flex; flex-direction: column; gap: 0.35rem; }
 .hero-editor .ed-item { display: flex; gap: 0.4rem; align-items: center; }
+.hero-editor .ed-item.dragging { opacity: 0.5; }
+/* drag handle on each item row */
+.hero-editor .ed-item-drag {
+  flex: none; background: none; border: none; padding: 0 0.1rem; margin: 0;
+  color: var(--ink-faint); cursor: grab; touch-action: none;
+  display: inline-flex; align-items: center;
+}
+.hero-editor .ed-item-drag:hover { color: var(--accent); }
+.hero-editor .ed-item-drag:active { cursor: grabbing; }
 .hero-editor .ed-item .ed-item-input { flex: 1; }
 .hero-editor .ed-item-rm {
   flex: none; width: 1.8rem; padding: 0.3rem 0; background: var(--bg-card);
