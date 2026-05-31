@@ -391,18 +391,6 @@
       ]
     },
     {
-      "id": "kumiko-generator",
-      "title": "Kumiko Woodworking Pattern Generator",
-      "desc": "",
-      "color": null,
-      "section": "digital",
-      "inProgress": false,
-      "frame": "browser",
-      "photos": [
-        "img/Kumiko-Generator.png"
-      ]
-    },
-    {
       "id": "ros",
       "title": "4 Axis + Gripper Robotic Arm Operating System",
       "desc": "Designed for the BCN3D Moveo Arm",
@@ -413,6 +401,18 @@
         "img/ROS.jpeg"
       ],
       "frame": "browser"
+    },
+    {
+      "id": "kumiko-generator",
+      "title": "Kumiko Woodworking Pattern Generator",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "frame": "browser",
+      "photos": [
+        "img/Kumiko-Generator.png"
+      ]
     },
     {
       "id": "inkpress1",
