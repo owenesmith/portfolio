@@ -124,7 +124,8 @@
       "section": "physical"
     },
     "ros": {
-      "title": "ROS",
+      "title": "4 Axis + Gripper Robotic Arm Operating System",
+      "desc": "Designed for the BCN3D Moveo Arm",
       "section": "digital",
       "frame": "browser"
     }
