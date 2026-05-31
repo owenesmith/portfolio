@@ -186,6 +186,9 @@
       "title": "Procedural Line Art Generator for Ink Press Printing",
       "section": "digital",
       "frame": "browser"
+    },
+    "vision-board": {
+      "section": "digital"
     }
   },
   "order": {
@@ -229,7 +232,8 @@
       "kumiko-generator",
       "marble-track-generator",
       "orbitframe1",
-      "linegen"
+      "linegen",
+      "vision-board"
     ]
   }
 }

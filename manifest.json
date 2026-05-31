@@ -477,6 +477,17 @@
       "photos": [
         "img/LineGen.jpeg"
       ]
+    },
+    {
+      "id": "vision-board",
+      "title": "Vision Board",
+      "desc": "",
+      "color": null,
+      "section": "digital",
+      "inProgress": false,
+      "photos": [
+        "img/Vision-Board.jpeg"
+      ]
     }
   ]
 }
