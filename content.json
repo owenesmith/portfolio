@@ -188,7 +188,9 @@
       "frame": "browser"
     },
     "vision-board": {
-      "section": "digital"
+      "title": "Vision Board App",
+      "section": "digital",
+      "frame": "browser"
     }
   },
   "order": {

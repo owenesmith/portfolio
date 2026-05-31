@@ -480,14 +480,15 @@
     },
     {
       "id": "vision-board",
-      "title": "Vision Board",
+      "title": "Vision Board App",
       "desc": "",
       "color": null,
       "section": "digital",
       "inProgress": false,
       "photos": [
         "img/Vision-Board.jpeg"
-      ]
+      ],
+      "frame": "browser"
     }
   ]
 }
