@@ -162,11 +162,11 @@
       "pierscope-companion-viewer",
       "portfolio2",
       "kumiko-generator",
+      "ros",
       "clarity1",
       "inkpress1",
       "marble-track-generator",
-      "orbitframe1",
-      "ros"
+      "orbitframe1"
     ]
   }
 }
