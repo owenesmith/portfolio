@@ -437,7 +437,7 @@
     {
       "id": "crystal-anamorphic-sculptor",
       "title": "Crystal anamorphic sculptor",
-      "desc": "",
+      "desc": "Takes 3D model, places it in crystal cube with simulated refractive index, breaks the model into pieces and disperses + scales them to create an anamorphic engraving only viewable from one angle.",
       "link": "",
       "color": null,
       "section": "digital",
