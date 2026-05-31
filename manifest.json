@@ -468,14 +468,15 @@
     },
     {
       "id": "linegen",
-      "title": "LineGen",
+      "title": "Procedural Line Art Generator for Ink Press Printing",
       "desc": "",
       "color": null,
       "section": "digital",
       "inProgress": false,
       "photos": [
         "img/LineGen.jpeg"
-      ]
+      ],
+      "frame": "browser"
     }
   ]
 }

@@ -141,7 +141,9 @@
       "frame": "browser"
     },
     "linegen": {
-      "section": "digital"
+      "title": "Procedural Line Art Generator for Ink Press Printing",
+      "section": "digital",
+      "frame": "browser"
     }
   },
   "order": {
