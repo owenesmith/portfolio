@@ -167,6 +167,19 @@
       ]
     },
     {
+      "id": "img-3088",
+      "title": "Steel Book Stand",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/IMG_3088.jpeg"
+      ],
+      "link": "",
+      "frame": "none"
+    },
+    {
       "id": "slate-coasters",
       "title": "Slate Coasters",
       "desc": "",
@@ -362,19 +375,6 @@
       "photos": [
         "img/IMG_0367.jpeg"
       ]
-    },
-    {
-      "id": "img-3088",
-      "title": "Steel Book Stand",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "photos": [
-        "img/IMG_3088.jpeg"
-      ],
-      "link": "",
-      "frame": "none"
     },
     {
       "id": "img-3086",
