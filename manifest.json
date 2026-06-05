@@ -180,6 +180,21 @@
       "frame": "none"
     },
     {
+      "id": "img-3086",
+      "title": "Steel Backpack Hook",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/IMG_3086.jpeg",
+        "img/IMG_3086-2.jpeg",
+        "img/IMG_3086-3.jpeg"
+      ],
+      "link": "",
+      "frame": "none"
+    },
+    {
       "id": "slate-coasters",
       "title": "Slate Coasters",
       "desc": "",
@@ -375,21 +390,6 @@
       "photos": [
         "img/IMG_0367.jpeg"
       ]
-    },
-    {
-      "id": "img-3086",
-      "title": "Steel Backpack Hook",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "photos": [
-        "img/IMG_3086.jpeg",
-        "img/IMG_3086-2.jpeg",
-        "img/IMG_3086-3.jpeg"
-      ],
-      "link": "",
-      "frame": "none"
     }
   ],
   "digital": [
