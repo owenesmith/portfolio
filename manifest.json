@@ -365,14 +365,16 @@
     },
     {
       "id": "img-3088",
-      "title": "IMG_3088",
+      "title": "Steel Book Stand",
       "desc": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
       "photos": [
         "img/IMG_3088.jpeg"
-      ]
+      ],
+      "link": "",
+      "frame": "none"
     }
   ],
   "digital": [
