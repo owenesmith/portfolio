@@ -378,7 +378,7 @@
     },
     {
       "id": "img-3086",
-      "title": "IMG_3086",
+      "title": "Steel Backpack Hook",
       "desc": "",
       "color": null,
       "section": "physical",
@@ -387,7 +387,9 @@
         "img/IMG_3086.jpeg",
         "img/IMG_3086-2.jpeg",
         "img/IMG_3086-3.jpeg"
-      ]
+      ],
+      "link": "",
+      "frame": "none"
     }
   ],
   "digital": [
