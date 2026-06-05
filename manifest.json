@@ -362,6 +362,17 @@
       "photos": [
         "img/IMG_0367.jpeg"
       ]
+    },
+    {
+      "id": "img-3088",
+      "title": "IMG_3088",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/IMG_3088.jpeg"
+      ]
     }
   ],
   "digital": [
