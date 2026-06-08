@@ -123,9 +123,9 @@
       "section": "physical"
     },
     "pierscope-companion-viewer": {
-      "title": "PierScope Companion Viewer",
+      "title": "Union Pier Research Web Viewer",
       "desc": "Website for viewing data collected from PierScope app.",
-      "link": "https://owenesmith.github.io/fieldscope-viewer/",
+      "link": "https://unionpier.vercel.app/",
       "section": "digital",
       "inProgress": true,
       "frame": "browser"
