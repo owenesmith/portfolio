@@ -395,7 +395,7 @@
   "digital": [
     {
       "id": "pierscope1",
-      "title": "PierScope",
+      "title": "Union Pier Research App",
       "desc": "A field research app designed for analyzing Charleston neighborhoods in relation to Union Pier.\n\nhttps://apps.apple.com/us/app/pierscope/id6774477136",
       "link": "https://apps.apple.com/us/app/pierscope/id6774477136",
       "color": null,
@@ -418,7 +418,6 @@
       "inProgress": true,
       "frame": "browser",
       "photos": [
-        "img/PierScope-Companion-Viewer.png",
         "img/PierScope-Companion-Viewer-2.jpeg"
       ]
     },
