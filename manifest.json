@@ -390,6 +390,17 @@
       "photos": [
         "img/IMG_0367.jpeg"
       ]
+    },
+    {
+      "id": "woodblock-prints",
+      "title": "Woodblock Prints",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/Woodblock-Prints.jpeg"
+      ]
     }
   ],
   "digital": [
