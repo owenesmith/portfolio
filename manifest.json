@@ -404,14 +404,16 @@
     },
     {
       "id": "512b88f9-5bc6-46e9-981a-e9307496cc6e-1-105-c",
-      "title": "512B88F9 5BC6 46E9 981A E9307496CC6E_1_105_c",
+      "title": "Walnut, Maple, and Linen Blank Frame",
       "desc": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
       "photos": [
         "img/512B88F9-5BC6-46E9-981A-E9307496CC6E_1_105_c.jpeg"
-      ]
+      ],
+      "link": "",
+      "frame": "none"
     }
   ],
   "digital": [
