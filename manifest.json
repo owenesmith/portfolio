@@ -425,7 +425,9 @@
       "inProgress": false,
       "photos": [
         "img/Frame-2.jpeg"
-      ]
+      ],
+      "link": "",
+      "frame": "none"
     }
   ],
   "digital": [

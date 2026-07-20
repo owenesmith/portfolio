@@ -223,6 +223,10 @@
       "title": "Woodblock Print + Frame",
       "link": "Walnut + Maple Frame, Woodblock Print on Linen",
       "section": "physical"
+    },
+    "frame": {
+      "title": "Frame",
+      "section": "physical"
     }
   },
   "order": {
