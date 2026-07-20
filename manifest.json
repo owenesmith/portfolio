@@ -45,6 +45,19 @@
       ]
     },
     {
+      "id": "frame",
+      "title": "Frame",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/Frame-2.jpeg"
+      ],
+      "link": "",
+      "frame": "none"
+    },
+    {
       "id": "512b88f9-5bc6-46e9-981a-e9307496cc6e-1-105-c",
       "title": "Woodblock Print + Frame",
       "desc": "",
@@ -56,19 +69,6 @@
         "img/512B88F9-5BC6-46E9-981A-E9307496CC6E_1_105_c-3.jpeg"
       ],
       "link": "Walnut + Maple Frame, Woodblock Print on Linen",
-      "frame": "none"
-    },
-    {
-      "id": "frame",
-      "title": "Frame",
-      "desc": "",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "photos": [
-        "img/Frame-2.jpeg"
-      ],
-      "link": "",
       "frame": "none"
     },
     {
