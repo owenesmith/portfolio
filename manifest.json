@@ -415,6 +415,17 @@
       "photos": [
         "img/Woodblock-Prints.jpeg"
       ]
+    },
+    {
+      "id": "frame",
+      "title": "Frame",
+      "desc": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "photos": [
+        "img/Frame.jpeg"
+      ]
     }
   ],
   "digital": [
