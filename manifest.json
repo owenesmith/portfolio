@@ -45,19 +45,6 @@
       ]
     },
     {
-      "id": "balance-scale",
-      "title": "Balance Scale",
-      "desc": "Maple, Walnut, Oak, with Intentionality tokens.",
-      "link": "",
-      "color": null,
-      "section": "physical",
-      "inProgress": false,
-      "frame": "none",
-      "photos": [
-        "img/Balance-Scale-2.jpeg"
-      ]
-    },
-    {
       "id": "512b88f9-5bc6-46e9-981a-e9307496cc6e-1-105-c",
       "title": "Woodblock Print + Frame",
       "desc": "",
@@ -97,6 +84,19 @@
         "img/Rotating-Poster-Frame-1.mp4",
         "img/Rotating-Poster-Frame-2.jpeg",
         "img/Rotating-Poster-Frame-3.mp4"
+      ]
+    },
+    {
+      "id": "balance-scale",
+      "title": "Balance Scale",
+      "desc": "Maple, Walnut, Oak, with Intentionality tokens.",
+      "link": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Balance-Scale-2.jpeg"
       ]
     },
     {
