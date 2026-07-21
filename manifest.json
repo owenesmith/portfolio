@@ -48,28 +48,29 @@
       "id": "frame",
       "title": "Coaxial Arm",
       "desc": "",
+      "link": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
+        "img/Frame-1.mp4",
         "img/Frame-2.jpeg"
-      ],
-      "link": "",
-      "frame": "none"
+      ]
     },
     {
       "id": "512b88f9-5bc6-46e9-981a-e9307496cc6e-1-105-c",
       "title": "Woodblock Print + Frame",
       "desc": "",
+      "link": "Walnut + Maple Frame, Woodblock Print on Linen",
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/512B88F9-5BC6-46E9-981A-E9307496CC6E_1_105_c-2.jpeg",
         "img/512B88F9-5BC6-46E9-981A-E9307496CC6E_1_105_c-3.jpeg"
-      ],
-      "link": "Walnut + Maple Frame, Woodblock Print on Linen",
-      "frame": "none"
+      ]
     },
     {
       "id": "rotating-poster-frame",
@@ -196,30 +197,30 @@
       "id": "img-3088",
       "title": "Steel Book Stand",
       "desc": "",
+      "link": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/IMG_3088.jpeg",
         "img/IMG_3088-2.jpeg"
-      ],
-      "link": "",
-      "frame": "none"
+      ]
     },
     {
       "id": "img-3086",
       "title": "Steel Backpack Hook",
       "desc": "",
+      "link": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/IMG_3086.jpeg",
         "img/IMG_3086-2.jpeg",
         "img/IMG_3086-3.jpeg"
-      ],
-      "link": "",
-      "frame": "none"
+      ]
     },
     {
       "id": "slate-coasters",
@@ -422,9 +423,11 @@
       "id": "woodblock-prints",
       "title": "Woodblock Prints",
       "desc": "",
+      "link": "",
       "color": null,
       "section": "physical",
       "inProgress": false,
+      "frame": "none",
       "photos": [
         "img/Woodblock-Prints.jpeg"
       ]
@@ -456,6 +459,7 @@
       "inProgress": true,
       "frame": "browser",
       "photos": [
+        "img/PierScope-Companion-Viewer.png",
         "img/PierScope-Companion-Viewer-2.jpeg"
       ]
     },
