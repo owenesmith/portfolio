@@ -23,11 +23,22 @@ const MANIFEST_FILE = path.join(ROOT, 'manifest.json');
 const INDEX_FILE = path.join(ROOT, 'index.html');
 
 const IMAGE_EXT = new Set(['.jpeg', '.jpg', '.png', '.webp']);
-const VIDEO_EXT = new Set(['.mp4', '.webm', '.m4v']);
-const MOV_EXT = new Set(['.mov', '.qt']);
+// Our one canonical clip format — everything animated is normalized to this and
+// plays on the site as a muted, seamless, GIF-like loop (<video muted loop>).
+const MP4_EXT = new Set(['.mp4']);
+// Any moving-image / animation source we transcode into a looping .mp4: phone
+// clips, screen recordings, GIFs, and assorted container formats. Drop any of
+// these into img/ (or upload them in the studio) and they Just Work.
+const CLIP_SRC_EXT = new Set(['.mov', '.qt', '.gif', '.webm', '.m4v', '.avi', '.mkv',
+  '.mpg', '.mpeg', '.mpe', '.m2v', '.3gp', '.3g2', '.ogv', '.wmv', '.flv', '.m2ts', '.mts', '.ts']);
+const VIDEO_EXT = new Set([...MP4_EXT, ...CLIP_SRC_EXT]); // recognized as "video" when listing media
 const MAX_EDGE = 1400;        // longest side after optimize
 const OPTIMIZE_IF_EDGE_OVER = 1500;
 const OPTIMIZE_IF_BYTES_OVER = 1_200_000;
+const CLIP_MAX_W = 720;                          // downscale wide clips to this (never upscale)
+const CLIP_CRF = 28;                             // H.264 quality (lower = sharper/larger)
+const CLIP_FPS = 30;
+const CLIP_REENCODE_IF_BYTES_OVER = 6_000_000;   // re-optimize an already-.mp4 only if it's this big
 
 const log = (...a) => console.log(...a);
 const has = (cmd) => { try { execFileSync('command', ['-v', cmd], { stdio: 'ignore', shell: '/bin/zsh' }); return true; } catch { return false; } };
@@ -51,7 +62,7 @@ function listMedia() {
   return fs.readdirSync(IMG).filter((f) => {
     if (f.startsWith('.')) return false;
     const ext = path.extname(f).toLowerCase();
-    return IMAGE_EXT.has(ext) || VIDEO_EXT.has(ext) || MOV_EXT.has(ext);
+    return IMAGE_EXT.has(ext) || VIDEO_EXT.has(ext);
   });
 }
 
@@ -69,22 +80,69 @@ function backup(file) {
   if (!fs.existsSync(dest)) fs.copyFileSync(file, dest);
 }
 
-// ---- 1. Normalize media: convert .mov -> .mp4, optimize large images ----
+// Transcode any clip/GIF into a web-sized, muted, seamlessly-looping .mp4.
+//   • scale=2*trunc(min(720,iw)/2):-2  → cap width at 720, only downscale (never
+//     upscale a small GIF), keeping both dimensions even for yuv420p. The comma
+//     inside min() is \-escaped so ffmpeg's filtergraph parser doesn't split on it.
+//   • fps cap + H.264 high/yuv420p + faststart → plays inline everywhere (incl. iOS).
+function encodeClip(src, out) {
+  const vf = `scale=2*trunc(min(${CLIP_MAX_W}\\,iw)/2):-2,fps=${CLIP_FPS}`;
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src, '-an',
+    '-vf', vf, '-c:v', 'libx264', '-profile:v', 'high',
+    '-pix_fmt', 'yuv420p', '-crf', String(CLIP_CRF), '-movflags', '+faststart', out]);
+}
+
+// ---- 1. Normalize media: convert any clip/GIF -> looping .mp4, optimize large images ----
 function normalize() {
   let changed = 0;
   for (const f of listMedia()) {
     const src = path.join(IMG, f);
     const ext = path.extname(f).toLowerCase();
 
-    if (MOV_EXT.has(ext)) {
-      const outName = baseOfFull(f) + '.mp4';
-      const out = path.join(IMG, outName);
+    // (a) Any clip/animation source (.mov/.mp4-alt/.gif/.webm/...) → one looping .mp4.
+    //     The original is backed up to _originals/ (git-ignored) and removed from img/.
+    if (CLIP_SRC_EXT.has(ext)) {
+      let outName = baseOfFull(f) + '.mp4';
+      // don't clobber a *different* existing .mp4 that happens to share the base name
+      if (fs.existsSync(path.join(IMG, outName)) && outName.toLowerCase() !== f.toLowerCase()) {
+        outName = baseOfFull(f) + '-clip.mp4';
+      }
       log(`  converting clip ${f} -> ${outName}`);
-      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src, '-an',
-        '-vf', 'scale=720:-2,fps=30', '-c:v', 'libx264', '-profile:v', 'high',
-        '-pix_fmt', 'yuv420p', '-crf', '28', '-movflags', '+faststart', out]);
-      backup(src); fs.rmSync(src);
-      changed++;
+      try {
+        encodeClip(src, path.join(IMG, outName));
+        backup(src); fs.rmSync(src);
+        changed++;
+      } catch (e) {
+        // A single undecodable file must not wedge the whole pipeline (the studio
+        // re-runs this on every save). Set it aside so it can't re-trigger or leave a
+        // broken card, and keep going.
+        console.error(`  ✗ could not convert ${f} — skipping (${e.message.split('\n')[0]})`);
+        try { backup(src); fs.rmSync(src); } catch {}
+      }
+      continue;
+    }
+
+    // (b) An already-.mp4 that's oversized (e.g. a raw screen recording dropped in) →
+    //     optimize once. Converges safely: we only adopt the result if it's meaningfully
+    //     smaller, so it can never loop forever re-encoding its own output. The temp uses a
+    //     leading dot so listMedia() and the studio watcher both ignore it.
+    if (MP4_EXT.has(ext)) {
+      const bytes = fs.statSync(src).size;
+      if (bytes > CLIP_REENCODE_IF_BYTES_OVER) {
+        const tmp = path.join(IMG, '.tmp-' + f);
+        try {
+          encodeClip(src, tmp);
+          if (fs.existsSync(tmp) && fs.statSync(tmp).size < bytes * 0.9) {
+            log(`  optimizing clip ${f} (${(bytes / 1e6).toFixed(1)}MB)`);
+            backup(src);
+            fs.renameSync(tmp, src);
+            changed++;
+          } else if (fs.existsSync(tmp)) fs.rmSync(tmp);
+        } catch (e) {
+          try { if (fs.existsSync(tmp)) fs.rmSync(tmp); } catch {}
+          console.error('  clip optimize failed for', f, '-', e.message);
+        }
+      }
       continue;
     }
 

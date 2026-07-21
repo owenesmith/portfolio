@@ -17,7 +17,7 @@ node studio.mjs          # then open http://localhost:8765
 
 Click **login** in the footer (your password), then:
 
-- **Drop image files anywhere on the page** (or into the `img/` folder) to add them.
+- **Drop images or video clips anywhere on the page** (or into the `img/` folder) to add them.
 - Click **✎ Edit** on a card to set its **title**, **description**, and **section** (Physical / Digital).
 - **Drag** cards to reorder.
 - Click **Publish to GitHub** to commit & push.
@@ -39,7 +39,10 @@ Cutting-Board-2.jpeg   ┘→  "Cutting Board" (2-photo carousel)
 Balance-Scale.jpeg     →   "Balance Scale" (single)
 ```
 
-- Images (`.jpeg/.jpg/.png/.webp`) and clips (`.mp4`, or `.mov` which is auto-converted) are supported.
+- Images (`.jpeg/.jpg/.png/.webp`) and clips are supported. Any clip or animation —
+  `.mov`, `.mp4`, `.gif`, `.webm`, `.avi`, and more — is auto-converted to a muted,
+  seamlessly-looping `.mp4` (plays like a GIF, a fraction of the size). Full-res
+  originals are kept in `img/_originals/` (git-ignored).
 - Cards with multiple items auto-rotate every 5s and show arrows + dots.
 - Large photos are auto-optimized for the web; the full-resolution originals are
   kept in `img/_originals/` (git-ignored, never deployed).

@@ -10,6 +10,12 @@
   // ---------- Config ----------
   const palette = ["#8a3a1f", "#a8551f", "#6b4423", "#4a4a52", "#7d5a3c", "#2b2018", "#9c5b2a", "#5e5e68"];
   const isVideo = (src) => /\.(mp4|webm|ogg|m4v)$/i.test(src);
+  // What can be uploaded. Clips/GIFs are transcoded to a looping .mp4 by the studio
+  // (generate.mjs). Photos: jpg/png/webp. accept="…" on the file inputs mirrors these.
+  const UPLOAD_IMG_RE = /\.(jpe?g|png|webp)$/i;
+  const UPLOAD_CLIP_RE = /\.(mov|qt|gif|mp4|m4v|webm|avi|mkv|mpe?g|mpe|m2v|3gp|3g2|ogv|wmv|flv|m2ts|mts|ts)$/i;
+  const UPLOAD_OK_RE = /\.(jpe?g|png|webp|gif|mov|qt|mp4|m4v|webm|avi|mkv|mpe?g|mpe|m2v|3gp|3g2|ogv|wmv|flv|m2ts|mts|ts)$/i;
+  const FILE_ACCEPT = "image/*,video/*,.mov,.qt,.mp4,.m4v,.webm,.gif,.avi,.mkv,.mpg,.mpeg,.3gp,.ogv";
   const CYCLE_MS = 5200, STAGGER_MS = 240, SKIP_CYCLES = 2;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PASS_HASH = "02b035a06145202e2f913590c2c6b12899da968b042b6803430bace1f86c93da";
@@ -532,8 +538,8 @@
         <button class="ed-save" type="button">Save</button><button class="ed-cancel" type="button">Cancel</button><button class="ed-hide" type="button">Hide</button>
       </div>
       <div class="ed-label">Images <span class="ed-hint">⟲ replace · ✕ remove</span></div>
-      <div class="ed-images">${thumbs}<button type="button" class="ed-add" title="Add image(s) to this project">+ Add</button></div>
-      <input type="file" class="ed-file-add" accept="image/*" multiple hidden>
+      <div class="ed-images">${thumbs}<button type="button" class="ed-add" title="Add photo(s) or a clip to this project">+ Add</button></div>
+      <input type="file" class="ed-file-add" accept="${FILE_ACCEPT}" multiple hidden>
       <input type="file" class="ed-file-rep" accept="image/*" hidden>`;
     card.appendChild(ed); openEditorEl = ed;
     ed.querySelector('.ed-cancel').addEventListener('click', () => { ed.remove(); openEditorEl = null; });
@@ -700,7 +706,7 @@
   });
   function normalizeName(name) {
     let base = name.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9 _-]+/g, '').trim().replace(/\s+/g, '-');
-    const ext = /\.(mp4|m4v|webm)$/i.test(name) ? name.match(/\.[^.]+$/)[0] : '.jpeg';
+    const ext = UPLOAD_CLIP_RE.test(name) ? name.match(/\.[^.]+$/)[0] : '.jpeg';
     return base + ext;
   }
   function integrateImage(path, section = 'physical') {
@@ -716,11 +722,12 @@
     return proj;
   }
   async function uploadFiles(fileList, section = 'physical') {
-    const files = [...fileList].filter(f => /\.(jpe?g|png|webp|mov|mp4|m4v)$/i.test(f.name));
-    if (!files.length) { flashMsg('No image files in that drop.'); return; }
+    const files = [...fileList].filter(f => UPLOAD_OK_RE.test(f.name));
+    if (!files.length) { flashMsg('No image or video files in that drop.'); return; }
     const where = section === 'digital' ? 'Digital' : 'Physical';
     if (API_OK) {
-      flashMsg('Adding ' + files.length + ' to ' + where + '…');
+      const vids = files.filter(f => UPLOAD_CLIP_RE.test(f.name)).length;
+      flashMsg('Adding ' + files.length + ' to ' + where + (vids ? ' (converting clip' + (vids > 1 ? 's' : '') + ' to a loop…)' : '…'));
       for (const f of files) { try { await fetch('/api/upload/' + encodeURIComponent(f.name), { method: 'PUT', body: await f.arrayBuffer() }); } catch (e) { flashMsg('Upload failed: ' + e.message); } }
       if (section !== 'physical') {
         CONTENT.items = CONTENT.items || {};
@@ -730,11 +737,13 @@
       await loadData(); render(); flashMsg(files.length + ' added to ' + where + ' — click ✎ Edit to name & describe.');
     } else if (GH.connected()) {
       try {
-        flashMsg('Optimizing & committing ' + files.length + ' image(s) to ' + where + '…');
+        const vids = files.filter(f => UPLOAD_CLIP_RE.test(f.name));
+        if (vids.length) flashMsg('Add videos/GIFs via the local studio (node studio.mjs) so they convert to a loop.');
+        const imgs = files.filter(f => UPLOAD_IMG_RE.test(f.name));
+        if (!imgs.length) { if (!vids.length) flashMsg('No image files in that drop.'); return; }
+        flashMsg('Optimizing & committing ' + imgs.length + ' image(s) to ' + where + '…');
         const extra = [];
-        for (const f of files) {
-          const isVid = /\.(mp4|m4v|webm)$/i.test(f.name);
-          if (isVid) { flashMsg('Videos must be added via the local studio (node studio.mjs).'); continue; }
+        for (const f of imgs) {
           const blob = await optimizeImage(f);
           const name = normalizeName(f.name); const path = 'img/' + name;
           previewUrls[path] = URL.createObjectURL(blob);
@@ -748,32 +757,43 @@
 
   // ---------- Per-project image management (add / replace / remove) ----------
   const projectBase = (project) => project.photos.length ? baseOf(project.photos[0].split('/').pop()) : project.title.replace(/[^A-Za-z0-9]+/g, '-');
-  function nextNames(project, count) {
-    const base = projectBase(project);
+  // highest trailing -N already used in a project (single-item projects count as 1)
+  function nextBaseNumber(project) {
     let max = 0;
     for (const ph of project.photos) { const s = suffixOf(ph.split('/').pop()); max = Math.max(max, s < 0 ? 1 : s); }
-    return Array.from({ length: count }, (_, k) => `${base}-${max + 1 + k}.jpeg`);
+    return max;
   }
   function reopenEditor(id) {
     const proj = findProject(id); if (!proj) return;
     const card = [...document.querySelectorAll('.card')].find(c => c.dataset.id === id);
     if (card) openEditor(card, proj, proj.section);
   }
+  // Add photos AND/OR clips to an existing project. Photos are optimized to jpeg in the
+  // browser; clips/GIFs upload raw and the studio transcodes them to a looping .mp4. New
+  // files continue the project's -N numbering so they group into the same card.
   async function addPhotosToProject(project, fileList) {
-    const files = [...fileList].filter(f => /\.(jpe?g|png|webp)$/i.test(f.name));
-    if (!files.length) { flashMsg('Pick image files (jpg/png/webp).'); return; }
-    const names = nextNames(project, files.length);
+    const all = [...fileList];
+    const images = all.filter(f => UPLOAD_IMG_RE.test(f.name));
+    const clips = all.filter(f => UPLOAD_CLIP_RE.test(f.name));
+    if (!images.length && !clips.length) { flashMsg('Pick image or video files.'); return; }
+    const base = projectBase(project);
     try {
-      flashMsg('Adding ' + files.length + ' photo(s)…');
-      const blobs = []; for (const f of files) blobs.push(await optimizeImage(f));
       if (API_OK) {
-        for (let k = 0; k < blobs.length; k++) await fetch('/api/upload/' + encodeURIComponent(names[k]), { method: 'PUT', body: blobs[k] });
-        await loadData(); render(); reopenEditor(project.id); flashMsg('Added ' + files.length + ' photo(s).');
+        let n = nextBaseNumber(project);
+        flashMsg('Adding ' + (images.length + clips.length) + ' item(s)' + (clips.length ? ' (converting clip' + (clips.length > 1 ? 's' : '') + ' to a loop…)' : '…'));
+        for (const f of images) { const blob = await optimizeImage(f); await fetch('/api/upload/' + encodeURIComponent(`${base}-${++n}.jpeg`), { method: 'PUT', body: blob }); }
+        for (const f of clips) { const ext = (f.name.match(/\.[^.]+$/) || ['.mp4'])[0]; await fetch('/api/upload/' + encodeURIComponent(`${base}-${++n}${ext}`), { method: 'PUT', body: await f.arrayBuffer() }); }
+        await loadData(); render(); reopenEditor(project.id); flashMsg('Added ' + (images.length + clips.length) + ' item(s).');
       } else if (GH.connected()) {
+        if (clips.length) flashMsg('Add videos/GIFs via the local studio (node studio.mjs) so they convert to a loop.');
+        if (!images.length) return;
+        const start = nextBaseNumber(project);
+        const names = images.map((_, k) => `${base}-${start + 1 + k}.jpeg`);
+        const blobs = []; for (const f of images) blobs.push(await optimizeImage(f));
         const extra = []; const proj = findProject(project.id);
         for (let k = 0; k < blobs.length; k++) { const p = 'img/' + names[k]; previewUrls[p] = URL.createObjectURL(blobs[k]); proj.photos.push(p); extra.push({ path: p, blobBase64: await blobToBase64(blobs[k]) }); }
         proj.photos.sort((a, b) => suffixOf(a.split('/').pop()) - suffixOf(b.split('/').pop()));
-        await persist('Add ' + files.length + ' photo(s) to ' + project.title, extra); reopenEditor(project.id);
+        await persist('Add ' + images.length + ' photo(s) to ' + project.title, extra); reopenEditor(project.id);
       } else flashMsg('Connect GitHub (top bar) to add images.');
     } catch (e) { flashMsg('Add failed: ' + e.message); }
   }
@@ -813,17 +833,37 @@
   }
 
   // ---------- Login / edit mode ----------
+  // The password unlocks editing. Once entered, we remember it for the rest of the
+  // browser session (sessionStorage — cleared when the browser closes, never persisted
+  // to disk), so you can flip between Edit and View freely without retyping it. We also
+  // remember whether you were editing, so a reload (or a save on the live site) drops you
+  // right back into edit mode instead of logging you out.
+  const AUTH_KEY = 'portfolio.auth.v1', EDIT_KEY = 'portfolio.editing.v1';
+  const ss = { get: (k) => { try { return sessionStorage.getItem(k); } catch { return null; } },
+               set: (k, v) => { try { sessionStorage.setItem(k, v); } catch {} },
+               del: (k) => { try { sessionStorage.removeItem(k); } catch {} } };
+  const isAuthed = () => ss.get(AUTH_KEY) === '1';
   const loginBtn = document.getElementById('login-btn'), loginForm = document.getElementById('login-form');
   const loginPass = document.getElementById('login-pass'), loginError = document.getElementById('login-error');
   const editBar = document.getElementById('edit-bar'), editMsg = editBar.querySelector('.edit-bar__msg');
-  loginBtn.addEventListener('click', () => { loginForm.hidden = !loginForm.hidden; loginError.hidden = true; if (!loginForm.hidden) loginPass.focus(); });
+  // Footer button doubles as "login" (signed out) and "✎ Edit" (signed in, viewing).
+  function updateLoginBtn() {
+    if (!loginBtn) return;
+    if (isAuthed()) { loginBtn.textContent = '✎ Edit'; loginBtn.title = 'Enter edit mode'; loginBtn.classList.add('is-edit'); }
+    else { loginBtn.textContent = 'login'; loginBtn.removeAttribute('title'); loginBtn.classList.remove('is-edit'); loginForm.hidden = true; }
+  }
+  loginBtn.addEventListener('click', () => {
+    if (isAuthed()) { enterEditMode(); return; }                 // already signed in → straight to edit, no password
+    loginForm.hidden = !loginForm.hidden; loginError.hidden = true; if (!loginForm.hidden) loginPass.focus();
+  });
   loginPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryLogin(); });
   document.getElementById('login-submit').addEventListener('click', tryLogin);
   async function sha256hex(str) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
   async function tryLogin() {
     loginError.hidden = true; let hash;
     try { hash = await sha256hex(loginPass.value); } catch (e) { loginError.textContent = 'Login needs https or localhost'; loginError.hidden = false; return; }
-    if (hash === PASS_HASH) { loginPass.value = ''; loginForm.hidden = true; enterEditMode(); } else { loginError.textContent = 'Incorrect password'; loginError.hidden = false; }
+    if (hash === PASS_HASH) { loginPass.value = ''; loginForm.hidden = true; ss.set(AUTH_KEY, '1'); enterEditMode(); }
+    else { loginError.textContent = 'Incorrect password'; loginError.hidden = false; }
   }
   function chrome() {
     const ghConn = GH.connected();
@@ -841,9 +881,14 @@
       : (ghConn ? 'Editing the live site — changes commit to GitHub on save (live in ~1 min).'
                 : 'Connect GitHub to edit the live site (drag/✎/drop), or run node studio.mjs locally.');
   }
-  function enterEditMode() { editMode = true; document.body.classList.add('edit-mode'); editBar.hidden = false; loginBtn.hidden = true; chrome(); render(); }
-  function exitEditMode() { editMode = false; document.body.classList.remove('edit-mode'); editBar.hidden = true; loginBtn.hidden = false; if (openEditorEl) { openEditorEl.remove(); openEditorEl = null; } closeHeroEditor(); render(); }
+  function enterEditMode() { editMode = true; ss.set(EDIT_KEY, '1'); document.body.classList.add('edit-mode'); editBar.hidden = false; loginBtn.hidden = true; chrome(); render(); }
+  // "Done" — back to the normal view, but stay signed in for the session (the footer
+  // button becomes "✎ Edit" so you can jump back in with one click, no password).
+  function exitEditMode() { editMode = false; ss.del(EDIT_KEY); document.body.classList.remove('edit-mode'); editBar.hidden = true; if (openEditorEl) { openEditorEl.remove(); openEditorEl = null; } closeHeroEditor(); updateLoginBtn(); loginBtn.hidden = false; render(); }
+  // "Log out" — fully clear the session unlock (e.g. on a shared machine).
+  function signOut() { ss.del(AUTH_KEY); ss.del(EDIT_KEY); exitEditMode(); flashMsg('Signed out.'); }
   document.getElementById('logout-btn').addEventListener('click', exitEditMode);
+  { const so = document.getElementById('signout-btn'); if (so) so.addEventListener('click', signOut); }
   { const editSub = document.getElementById('edit-sub'); if (editSub) editSub.addEventListener('click', openSubtitleEditor); }
   document.getElementById('reset-order').addEventListener('click', () => { localStorage.removeItem(ORDER_KEY); loadData().then(render); flashMsg('Reset to default order.'); });
   document.getElementById('copy-order').addEventListener('click', async () => { const t = MANIFEST.physical.map((p, i) => `${i + 1}. ${p.title}`).join('\n'); try { await navigator.clipboard.writeText(t); flashMsg('Order copied.'); } catch (e) { window.prompt('Order:', MANIFEST.physical.map(p => p.title).join(' | ')); } });
@@ -972,5 +1017,9 @@
     initSmoothNav();
     initBackToTop();
     const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
+    // Restore the session: show "✎ Edit" if signed in, and drop straight back into edit
+    // mode if that's where you left off (survives reloads and live-site saves).
+    updateLoginBtn();
+    if (isAuthed() && ss.get(EDIT_KEY) === '1') enterEditMode();
   })();
 })();

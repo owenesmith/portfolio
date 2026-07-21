@@ -28,10 +28,14 @@ const TYPES = {
   '.json': 'application/json', '.css': 'text/css', '.svg': 'image/svg+xml',
   '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp',
   '.gif': 'image/gif', '.mp4': 'video/mp4', '.webm': 'video/webm', '.m4v': 'video/x-m4v',
+  '.mov': 'video/quicktime', '.qt': 'video/quicktime', '.avi': 'video/x-msvideo',
+  '.mkv': 'video/x-matroska', '.ogv': 'video/ogg', '.3gp': 'video/3gpp',
   '.ico': 'image/x-icon', '.txt': 'text/plain', '.md': 'text/markdown',
 };
-const UPLOAD_OK = /\.(jpe?g|png|webp|mov|mp4|m4v)$/i;
-const MAX_UPLOAD = 80 * 1024 * 1024;
+// Accept photos AND any clip/GIF source. Videos/GIFs are transcoded to a looping
+// .mp4 by generate.mjs right after upload (see regenerate() below).
+const UPLOAD_OK = /\.(jpe?g|png|webp|gif|mov|qt|mp4|m4v|webm|avi|mkv|mpe?g|mpe|m2v|3gp|3g2|ogv|wmv|flv|m2ts|mts|ts)$/i;
+const MAX_UPLOAD = 300 * 1024 * 1024;   // headroom for raw phone/screen-recording clips
 
 const regenerate = () => execFileSync('node', [path.join(ROOT, 'generate.mjs')], { cwd: ROOT }).toString();
 const readJson = (f, fallback) => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, f), 'utf8')); } catch { return fallback; } };
