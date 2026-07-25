@@ -234,7 +234,9 @@
     },
     "sand-table-control": {
       "title": "Sand Table Control",
-      "section": "digital"
+      "section": "digital",
+      "inProgress": true,
+      "frame": "browser"
     }
   },
   "order": {

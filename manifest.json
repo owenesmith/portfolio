@@ -603,13 +603,13 @@
       "desc": "",
       "color": null,
       "section": "digital",
-      "inProgress": false,
+      "inProgress": true,
       "photos": [
         "img/Sand-Table-Control.jpeg",
         "img/Sand-Table-Control-2.jpeg"
       ],
       "link": "",
-      "frame": "none"
+      "frame": "browser"
     }
   ]
 }
