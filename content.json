@@ -228,6 +228,12 @@
       "title": "Coaxial Arm",
       "desc": "For future sand magnet ball table.",
       "section": "physical"
+    },
+    "sand-table-control2": {
+      "section": "digital"
+    },
+    "sand-table-control": {
+      "section": "digital"
     }
   },
   "order": {
@@ -277,7 +283,9 @@
       "marble-track-generator",
       "orbitframe1",
       "linegen",
-      "vision-board"
+      "vision-board",
+      "sand-table-control2",
+      "sand-table-control"
     ]
   }
 }
