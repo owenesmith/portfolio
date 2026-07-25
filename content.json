@@ -226,6 +226,7 @@
     },
     "frame": {
       "title": "Coaxial Arm",
+      "desc": "For future sand magnet ball table.",
       "section": "physical"
     }
   },
