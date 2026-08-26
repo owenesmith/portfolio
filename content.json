@@ -42,6 +42,11 @@
     ]
   },
   "items": {
+    "kinetic-sand-table": {
+      "title": "Kinetic Sand Table",
+      "desc": "Walnut table with a 2-DOF SCARA arm driving a magnet beneath the surface, drawing endless patterns in sand with a steel ball.",
+      "section": "physical"
+    },
     "kumiko-style-lamp": {
       "title": "Kumiko Style Lamp",
       "desc": "Walnut and Purpleheart Beams, with Maple base. UV laser engraved and cut glass topper, CNC engraved diffuser.",
@@ -241,6 +246,7 @@
   },
   "order": {
     "physical": [
+      "kinetic-sand-table",
       "kumiko-style-lamp",
       "cutting-board",
       "charleston-union-pier-map",

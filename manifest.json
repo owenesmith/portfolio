@@ -1,6 +1,19 @@
 {
   "physical": [
     {
+      "id": "kinetic-sand-table",
+      "title": "Kinetic Sand Table",
+      "desc": "Walnut table with a 2-DOF SCARA arm driving a magnet beneath the surface, drawing endless patterns in sand with a steel ball.",
+      "link": "",
+      "color": null,
+      "section": "physical",
+      "inProgress": false,
+      "frame": "none",
+      "photos": [
+        "img/Kinetic-Sand-Table.mp4"
+      ]
+    },
+    {
       "id": "kumiko-style-lamp",
       "title": "Kumiko Style Lamp",
       "desc": "Walnut and Purpleheart Beams, with Maple base. UV laser engraved and cut glass topper, CNC engraved diffuser.",
@@ -601,15 +614,15 @@
       "id": "sand-table-control",
       "title": "Sand Table Control",
       "desc": "",
+      "link": "",
       "color": null,
       "section": "digital",
       "inProgress": true,
+      "frame": "browser",
       "photos": [
         "img/Sand-Table-Control.jpeg",
         "img/Sand-Table-Control-2.jpeg"
-      ],
-      "link": "",
-      "frame": "browser"
+      ]
     }
   ]
 }
